@@ -1,760 +1,1736 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>100xDevs Cohort Tracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<title>100xDevs Cohort 3.0 Tracker</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root,[data-theme="light"]{
-  --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;
-  --color-surface-offset:#f0ede8;--color-surface-dynamic:#e8e5e0;
-  --color-divider:#dcd9d5;--color-border:#d4d1ca;
-  --color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;
-  --color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-highlight:#cedcd8;
-  --color-success:#437a22;--color-success-highlight:#d4dfcc;
-  --color-warning:#964219;--color-warning-highlight:#ddcfc6;
-  --color-blue:#006494;--color-blue-highlight:#c6d8e4;
-  --color-purple:#7a39bb;--color-purple-highlight:#dacfde;
-  --color-orange:#da7101;--color-orange-highlight:#e7d7c4;
-  --shadow-sm:0 1px 2px oklch(0.2 0.01 80/0.06);
-  --shadow-md:0 4px 12px oklch(0.2 0.01 80/0.08);
-  --shadow-lg:0 12px 32px oklch(0.2 0.01 80/0.12);
-  --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--radius-full:9999px;
-  --text-xs:clamp(0.75rem,0.7rem+0.25vw,0.875rem);
-  --text-sm:clamp(0.875rem,0.8rem+0.35vw,1rem);
-  --text-base:clamp(1rem,0.95rem+0.25vw,1.125rem);
-  --text-lg:clamp(1.125rem,1rem+0.75vw,1.5rem);
-  --text-xl:clamp(1.5rem,1.2rem+1.25vw,2.25rem);
-  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
-  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
-  --space-12:3rem;--space-16:4rem;
-  --font-body:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;
-  --transition:180ms cubic-bezier(0.16,1,0.3,1);
+:root {
+  color-scheme: dark;
+  --bg: #101114;
+  --panel: #17191f;
+  --panel-2: #1f222a;
+  --muted: #9299a8;
+  --text: #eef1f6;
+  --soft: #c8ced9;
+  --line: #2b303a;
+  --primary: #42b8a6;
+  --primary-soft: rgba(66, 184, 166, .16);
+  --webdev: #6ea8fe;
+  --webdev-soft: rgba(110, 168, 254, .15);
+  --devops: #8fd16f;
+  --devops-soft: rgba(143, 209, 111, .15);
+  --web3: #c99cff;
+  --web3-soft: rgba(201, 156, 255, .16);
+  --other: #f2b36b;
+  --other-soft: rgba(242, 179, 107, .16);
+  --danger: #ff7474;
+  --shadow: 0 18px 60px rgba(0,0,0,.22);
 }
-[data-theme="dark"]{
-  --color-bg:#0f0e0d;--color-surface:#141312;--color-surface-2:#191817;
-  --color-surface-offset:#1d1c1a;--color-surface-dynamic:#252422;
-  --color-divider:#2a2927;--color-border:#333230;
-  --color-text:#d4d2cf;--color-text-muted:#7a7876;--color-text-faint:#4a4947;
-  --color-primary:#4f98a3;--color-primary-hover:#3a828c;--color-primary-highlight:#1e3335;
-  --color-success:#6daa45;--color-success-highlight:#1e3018;
-  --color-warning:#bb653b;--color-warning-highlight:#3a2518;
-  --color-blue:#5591c7;--color-blue-highlight:#1a2e40;
-  --color-purple:#a86fdf;--color-purple-highlight:#2e1e45;
-  --color-orange:#fdab43;--color-orange-highlight:#3a2810;
-  --shadow-sm:0 1px 2px oklch(0 0 0/0.25);
-  --shadow-md:0 4px 12px oklch(0 0 0/0.35);
-  --shadow-lg:0 12px 32px oklch(0 0 0/0.45);
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f6f7fb;
+  --panel: #ffffff;
+  --panel-2: #eef1f6;
+  --muted: #626b7a;
+  --text: #171b23;
+  --soft: #394150;
+  --line: #dde2ea;
+  --primary: #04776b;
+  --primary-soft: rgba(4, 119, 107, .12);
+  --webdev: #145ec8;
+  --webdev-soft: rgba(20, 94, 200, .11);
+  --devops: #447d24;
+  --devops-soft: rgba(68, 125, 36, .12);
+  --web3: #7947b8;
+  --web3-soft: rgba(121, 71, 184, .12);
+  --other: #a55d10;
+  --other-soft: rgba(165, 93, 16, .12);
+  --shadow: 0 18px 55px rgba(24,33,52,.10);
 }
-html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
-body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-sm);color:var(--color-text);background:var(--color-bg);line-height:1.6}
-button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
-a{color:inherit;text-decoration:none}
-img{display:block;max-width:100%;height:auto}
-
-/* LAYOUT */
-.app{display:grid;grid-template-columns:260px 1fr;min-height:100dvh}
-@media(max-width:768px){.app{grid-template-columns:1fr}}
-.sidebar{background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;position:sticky;top:0;height:100dvh;overflow-y:auto}
-.main{overflow:hidden;min-width:0}
-
-/* SIDEBAR */
-.sidebar-header{padding:var(--space-6) var(--space-5) var(--space-4);border-bottom:1px solid var(--color-divider)}
-.logo{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-4)}
-.logo-mark{width:34px;height:34px;flex-shrink:0}
-.logo-text{font-size:var(--text-base);font-weight:700;letter-spacing:-0.02em;line-height:1.2}
-.logo-text span{color:var(--color-primary)}
-
-/* OVERALL PROGRESS */
-.overall-progress{background:var(--color-surface-offset);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-3)}
-.progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2)}
-.progress-label span:first-child{font-size:var(--text-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.06em}
-.progress-pct{font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600;color:var(--color-primary)}
-.progress-bar{height:6px;background:var(--color-surface-dynamic);border-radius:var(--radius-full);overflow:hidden;margin-bottom:var(--space-2)}
-.progress-fill{height:100%;background:var(--color-primary);border-radius:var(--radius-full);transition:width 0.5s cubic-bezier(0.16,1,0.3,1)}
-.progress-stats{display:flex;gap:var(--space-4)}
-.stat-mini{text-align:center;flex:1}
-.stat-mini-val{font-family:var(--font-mono);font-size:var(--text-sm);font-weight:700;color:var(--color-text)}
-.stat-mini-lbl{font-size:var(--text-xs);color:var(--color-text-faint)}
-
-/* NAV */
-.nav-section{padding:var(--space-3) var(--space-5) var(--space-2)}
-.nav-section-title{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-faint);margin-bottom:var(--space-1)}
-.nav-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);margin-bottom:2px;cursor:pointer;transition:background var(--transition),color var(--transition);font-size:var(--text-sm);color:var(--color-text-muted)}
-.nav-item:hover{background:var(--color-surface-dynamic);color:var(--color-text)}
-.nav-item.active{background:var(--color-primary-highlight);color:var(--color-primary);font-weight:600}
-.nav-item .nav-dot{width:8px;height:8px;border-radius:var(--radius-full);flex-shrink:0}
-.nav-item .nav-count{margin-left:auto;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint)}
-.nav-item .nav-pct{margin-left:auto;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600}
-.sidebar-footer{margin-top:auto;padding:var(--space-4) var(--space-5);border-top:1px solid var(--color-divider);display:flex;align-items:center;justify-content:space-between}
-.theme-toggle{padding:var(--space-2);border-radius:var(--radius-md);color:var(--color-text-muted);transition:background var(--transition),color var(--transition)}
-.theme-toggle:hover{background:var(--color-surface-dynamic);color:var(--color-text)}
-.deadline-badge{font-size:var(--text-xs);color:var(--color-text-muted);display:flex;align-items:center;gap:var(--space-1)}
-
-/* TOPBAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) var(--space-8);border-bottom:1px solid var(--color-border);background:var(--color-bg);position:sticky;top:0;z-index:10}
-.topbar-title{font-size:var(--text-lg);font-weight:700;letter-spacing:-0.02em}
-.topbar-actions{display:flex;align-items:center;gap:var(--space-3)}
-.btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:500;transition:background var(--transition),color var(--transition),box-shadow var(--transition);cursor:pointer}
-.btn-primary{background:var(--color-primary);color:#fff}
-.btn-primary:hover{background:var(--color-primary-hover);box-shadow:var(--shadow-sm)}
-.btn-ghost{background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border)}
-.btn-ghost:hover{background:var(--color-surface-offset);color:var(--color-text)}
-.filter-bar{display:flex;gap:var(--space-2);align-items:center;padding:var(--space-3) var(--space-8);border-bottom:1px solid var(--color-divider);flex-wrap:wrap}
-.filter-chip{padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:500;cursor:pointer;border:1px solid var(--color-border);color:var(--color-text-muted);transition:all var(--transition)}
-.filter-chip:hover{border-color:var(--color-primary);color:var(--color-primary)}
-.filter-chip.active{background:var(--color-primary-highlight);border-color:var(--color-primary);color:var(--color-primary)}
-.search-input{padding:var(--space-1) var(--space-3);border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);font-size:var(--text-xs);outline:none;transition:border-color var(--transition);min-width:180px}
-.search-input:focus{border-color:var(--color-primary)}
-.search-input::placeholder{color:var(--color-text-faint)}
-
-/* CONTENT AREA */
-.content{padding:var(--space-6) var(--space-8);max-width:100%}
-
-/* DASHBOARD VIEW */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);margin-bottom:var(--space-8)}
-@media(max-width:1024px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.kpi-grid{grid-template-columns:1fr}}
-.kpi-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm)}
-.kpi-label{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-2)}
-.kpi-value{font-family:var(--font-mono);font-size:var(--text-xl);font-weight:700;line-height:1;margin-bottom:var(--space-1)}
-.kpi-sub{font-size:var(--text-xs);color:var(--color-text-faint)}
-
-/* PHASE TIMELINE */
-.phase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-4);margin-bottom:var(--space-8)}
-.phase-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm);transition:box-shadow var(--transition)}
-.phase-card:hover{box-shadow:var(--shadow-md)}
-.phase-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-3)}
-.phase-badge{font-size:var(--text-xs);font-weight:700;padding:var(--space-1) var(--space-2);border-radius:var(--radius-full);letter-spacing:0.04em}
-.phase-status{font-size:var(--text-xs);color:var(--color-text-faint)}
-.phase-title{font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-1)}
-.phase-subtitle{font-size:var(--text-xs);color:var(--color-text-muted);margin-bottom:var(--space-4)}
-.phase-progress{margin-bottom:var(--space-3)}
-.phase-prog-bar{height:4px;background:var(--color-surface-dynamic);border-radius:var(--radius-full);overflow:hidden;margin-top:var(--space-1)}
-.phase-prog-fill{height:100%;border-radius:var(--radius-full);transition:width 0.5s cubic-bezier(0.16,1,0.3,1)}
-.phase-meta{display:flex;gap:var(--space-3);flex-wrap:wrap}
-.phase-tag{font-size:var(--text-xs);color:var(--color-text-muted);display:flex;align-items:center;gap:var(--space-1)}
-
-/* SECTION HEADING */
-.section-heading{font-size:var(--text-lg);font-weight:700;letter-spacing:-0.01em;margin-bottom:var(--space-4);display:flex;align-items:center;gap:var(--space-3)}
-.section-heading .badge{font-size:var(--text-xs);font-weight:600;padding:var(--space-1) var(--space-2);border-radius:var(--radius-full)}
-
-/* LECTURE LIST */
-.lecture-group{margin-bottom:var(--space-8)}
-.lecture-group-header{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg) var(--radius-lg) 0 0;cursor:pointer;transition:background var(--transition)}
-.lecture-group-header:hover{background:var(--color-surface-offset)}
-.group-dot{width:10px;height:10px;border-radius:var(--radius-full);flex-shrink:0}
-.group-name{font-size:var(--text-sm);font-weight:600;flex:1}
-.group-progress-mini{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-muted)}
-.group-chevron{color:var(--color-text-faint);transition:transform var(--transition)}
-.group-chevron.open{transform:rotate(90deg)}
-.group-prog-bar{height:3px;background:var(--color-surface-dynamic)}
-.group-prog-fill{height:100%;transition:width 0.4s cubic-bezier(0.16,1,0.3,1)}
-
-/* LECTURE ITEMS */
-.lecture-list{border:1px solid var(--color-border);border-top:none;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden;display:none}
-.lecture-list.open{display:block}
-.lecture-item{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider);transition:background var(--transition);cursor:pointer}
-.lecture-item:last-child{border-bottom:none}
-.lecture-item:hover{background:var(--color-surface-offset)}
-.lecture-item.done{background:color-mix(in oklab,var(--color-success) 4%,var(--color-surface))}
-.lecture-item.done .lecture-title{color:var(--color-text-muted);text-decoration:line-through;text-decoration-color:var(--color-text-faint)}
-.lecture-check{width:18px;height:18px;border-radius:var(--radius-sm);border:2px solid var(--color-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--transition);background:var(--color-bg)}
-.lecture-item.done .lecture-check{background:var(--color-success);border-color:var(--color-success)}
-.lecture-check svg{display:none}
-.lecture-item.done .lecture-check svg{display:block}
-.lecture-title{font-size:var(--text-sm);line-height:1.4}
-.lecture-duration{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint);white-space:nowrap}
-.lecture-tag{font-size:var(--text-xs);padding:2px var(--space-2);border-radius:var(--radius-full);font-weight:500;white-space:nowrap}
-
-/* WEEKLY SCHEDULE */
-.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--space-3);margin-bottom:var(--space-8)}
-@media(max-width:900px){.week-grid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:500px){.week-grid{grid-template-columns:repeat(2,1fr)}}
-.day-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);text-align:center}
-.day-name{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-2)}
-.day-icon{font-size:1.5rem;margin-bottom:var(--space-2)}
-.day-task{font-size:var(--text-xs);color:var(--color-text-muted);line-height:1.5}
-.day-card.primary{border-color:var(--color-primary);background:var(--color-primary-highlight)}
-.day-card.primary .day-name{color:var(--color-primary)}
-
-/* VIEWS */
-.view{display:none}
-.view.active{display:block}
-
-/* EMPTY STATE */
-.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:var(--space-16) var(--space-8);color:var(--color-text-muted)}
-.empty-icon{font-size:3rem;margin-bottom:var(--space-4);opacity:0.4}
-.empty-state h3{font-size:var(--text-base);font-weight:600;color:var(--color-text);margin-bottom:var(--space-2)}
-.empty-state p{font-size:var(--text-sm);max-width:36ch}
-
-/* MOBILE TOPBAR */
-.mobile-nav{display:none}
-@media(max-width:768px){
-  .sidebar{display:none}.mobile-nav{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-border);background:var(--color-surface);position:sticky;top:0;z-index:20}
-  .topbar{padding:var(--space-3) var(--space-4)}.content{padding:var(--space-4)}
-  .kpi-grid{grid-template-columns:repeat(2,1fr)}.week-grid{grid-template-columns:repeat(2,1fr)}
-  .filter-bar{padding:var(--space-3) var(--space-4)}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
 }
-/* TOOLTIP */
-.tooltip-wrap{position:relative}
-.tooltip-wrap:hover .tooltip{opacity:1;transform:translateY(0)}
-.tooltip{position:absolute;bottom:calc(100%+6px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--color-text);color:var(--color-bg);font-size:var(--text-xs);padding:var(--space-1) var(--space-2);border-radius:var(--radius-sm);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity var(--transition),transform var(--transition);z-index:100}
-/* STREAK */
-.streak-row{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:var(--space-6)}
-.streak-cell{width:14px;height:14px;border-radius:2px;background:var(--color-surface-dynamic);cursor:default;transition:background var(--transition)}
-.streak-cell.done-1{background:color-mix(in oklab,var(--color-primary) 40%,var(--color-surface-dynamic))}
-.streak-cell.done-2{background:color-mix(in oklab,var(--color-primary) 65%,var(--color-surface-dynamic))}
-.streak-cell.done-3{background:var(--color-primary)}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+a { color: inherit; }
+.shell { min-height: 100vh; display: grid; grid-template-columns: 320px minmax(0, 1fr); }
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 24px;
+  border-right: 1px solid var(--line);
+  background: var(--panel);
+  overflow: auto;
+}
+.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  font-weight: 850;
+  letter-spacing: 0;
+}
+.brand h1 { margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: 0; }
+.brand p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+.progress-card, .panel {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+.progress-card { padding: 16px; margin-bottom: 18px; }
+.progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+.progress-head span:first-child { color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
+#overallPct { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 22px; font-weight: 800; color: var(--primary); }
+.meter { height: 10px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+[data-theme="light"] .meter { background: #e8edf4; }
+.meter > div { height: 100%; width: 0%; border-radius: inherit; background: linear-gradient(90deg, var(--primary), #72d673); transition: width .25s ease; }
+.side-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; }
+.side-stat { padding: 10px; border-radius: 8px; background: rgba(255,255,255,.04); text-align: center; }
+[data-theme="light"] .side-stat { background: #f5f7fa; }
+.side-stat strong { display: block; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 18px; }
+.side-stat span { color: var(--muted); font-size: 11px; }
+.track-list { display: grid; gap: 8px; margin: 18px 0; }
+.track-row { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.03); }
+[data-theme="light"] .track-row { background: #f8fafc; }
+.dot { width: 10px; height: 10px; border-radius: 99px; }
+.track-row span { color: var(--muted); font-size: 12px; }
+.track-row strong { font-size: 13px; }
+.side-note { color: var(--muted); font-size: 13px; margin: 16px 0 0; }
+.side-note a { color: var(--primary); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.main { min-width: 0; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  padding: 18px 28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+}
+.topbar h2 { margin: 0; font-size: 20px; letter-spacing: 0; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 9px 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.btn:hover { border-color: var(--primary); color: var(--primary); }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: white; }
+.content { padding: 28px; max-width: 1280px; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr); gap: 18px; margin-bottom: 18px; }
+.panel { padding: 20px; }
+.panel h3 { margin: 0 0 8px; font-size: 16px; letter-spacing: 0; }
+.panel p { color: var(--muted); margin: 0; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+.kpi { padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.kpi span { display: block; color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.kpi strong { display: block; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 24px; line-height: 1.05; }
+.controls { display: grid; grid-template-columns: minmax(220px, 1fr) auto auto; gap: 10px; align-items: center; margin: 18px 0; }
+.search, .select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 11px 12px;
+  outline: none;
+}
+.search:focus, .select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.list { display: grid; gap: 8px; }
+.lecture {
+  display: grid;
+  grid-template-columns: auto 56px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  transition: border-color .15s ease, background .15s ease, transform .15s ease;
+}
+.lecture:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--line)); transform: translateY(-1px); }
+.lecture.done { background: color-mix(in srgb, var(--primary-soft) 55%, var(--panel)); }
+.check {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 2px solid var(--line);
+  background: transparent;
+  display: grid;
+  place-items: center;
+  color: white;
+  padding: 0;
+}
+.lecture.done .check { background: var(--primary); border-color: var(--primary); }
+.check svg { opacity: 0; }
+.lecture.done .check svg { opacity: 1; }
+.num { color: var(--muted); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 13px; }
+.title { min-width: 0; font-weight: 680; }
+.lecture.done .title { color: var(--soft); text-decoration: line-through; text-decoration-color: var(--muted); }
+.duration { color: var(--muted); white-space: nowrap; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; }
+.badge { border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 780; white-space: nowrap; }
+.badge.webdev { color: var(--webdev); background: var(--webdev-soft); }
+.badge.devops { color: var(--devops); background: var(--devops-soft); }
+.badge.web3 { color: var(--web3); background: var(--web3-soft); }
+.badge.other { color: var(--other); background: var(--other-soft); }
+.empty { display: none; text-align: center; color: var(--muted); padding: 42px 16px; border: 1px dashed var(--line); border-radius: 8px; }
+.footer { color: var(--muted); font-size: 12px; margin: 18px 0 0; }
+@media (max-width: 980px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  .hero { grid-template-columns: 1fr; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .topbar { align-items: flex-start; flex-direction: column; padding: 16px; }
+  .content { padding: 16px; }
+  .kpis { grid-template-columns: 1fr; }
+  .controls { grid-template-columns: 1fr; }
+  .lecture { grid-template-columns: auto 44px minmax(0, 1fr); gap: 9px; }
+  .duration, .badge { grid-column: 3; justify-self: start; }
+}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">1x</div>
+      <div>
+        <h1>Cohort 3.0 Tracker</h1>
+        <p>Complete Web Development + DevOps + Blockchain</p>
+      </div>
+    </div>
 
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="logo">
-      <svg class="logo-mark" viewBox="0 0 34 34" fill="none">
-        <rect width="34" height="34" rx="8" fill="var(--color-primary)"/>
-        <text x="17" y="23" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="16" fill="white">1x</text>
-      </svg>
-      <div class="logo-text">100x<span>Devs</span><br><small style="font-weight:400;font-size:0.7em;color:var(--color-text-muted)">Cohort Tracker</small></div>
-    </div>
-    <div class="overall-progress" id="overall-progress-block">
-      <div class="progress-label">
-        <span>Overall Progress</span>
-        <span class="progress-pct" id="overall-pct">0%</span>
+    <section class="progress-card" aria-label="Overall progress">
+      <div class="progress-head"><span>Overall progress</span><strong id="overallPct">0%</strong></div>
+      <div class="meter"><div id="overallBar"></div></div>
+      <div class="side-stats">
+        <div class="side-stat"><strong id="doneCount">0</strong><span>Done</span></div>
+        <div class="side-stat"><strong id="leftCount">156</strong><span>Left</span></div>
+        <div class="side-stat"><strong id="totalCount">156</strong><span>Total</span></div>
       </div>
-      <div class="progress-bar"><div class="progress-fill" id="overall-fill" style="width:0%"></div></div>
-      <div class="progress-stats">
-        <div class="stat-mini"><div class="stat-mini-val" id="done-count">0</div><div class="stat-mini-lbl">Done</div></div>
-        <div class="stat-mini"><div class="stat-mini-val" id="remain-count">0</div><div class="stat-mini-lbl">Left</div></div>
-        <div class="stat-mini"><div class="stat-mini-val" id="total-count">0</div><div class="stat-mini-lbl">Total</div></div>
-      </div>
-    </div>
-  </div>
-  <div class="nav-section">
-    <div class="nav-section-title">Views</div>
-    <div class="nav-item active" data-view="dashboard" onclick="switchView('dashboard',this)">
-      <span class="nav-dot" style="background:var(--color-primary)"></span> Dashboard
-    </div>
-    <div class="nav-item" data-view="lectures" onclick="switchView('lectures',this)">
-      <span class="nav-dot" style="background:var(--color-blue)"></span> All Lectures
-    </div>
-    <div class="nav-item" data-view="roadmap" onclick="switchView('roadmap',this)">
-      <span class="nav-dot" style="background:var(--color-purple)"></span> Phase Roadmap
-    </div>
-    <div class="nav-item" data-view="schedule" onclick="switchView('schedule',this)">
-      <span class="nav-dot" style="background:var(--color-orange)"></span> Weekly Schedule
-    </div>
-  </div>
-  <div class="nav-section">
-    <div class="nav-section-title">Sections</div>
-    <div class="nav-item" data-view="lectures" data-filter="webdev" onclick="switchViewFilter('lectures','webdev',this)">
-      <span class="nav-dot" style="background:var(--color-blue)"></span> Web Dev
-      <span class="nav-pct" id="nav-pct-webdev" style="color:var(--color-blue)">0%</span>
-    </div>
-    <div class="nav-item" data-view="lectures" data-filter="devops" onclick="switchViewFilter('lectures','devops',this)">
-      <span class="nav-dot" style="background:var(--color-success)"></span> DevOps
-      <span class="nav-pct" id="nav-pct-devops" style="color:var(--color-success)">0%</span>
-    </div>
-    <div class="nav-item" data-view="lectures" data-filter="web3" onclick="switchViewFilter('lectures','web3',this)">
-      <span class="nav-dot" style="background:var(--color-purple)"></span> Web3 / Blockchain
-      <span class="nav-pct" id="nav-pct-web3" style="color:var(--color-purple)">0%</span>
-    </div>
-    <div class="nav-item" data-view="lectures" data-filter="extra" onclick="switchViewFilter('lectures','extra',this)">
-      <span class="nav-dot" style="background:var(--color-orange)"></span> Extra (Optional)
-      <span class="nav-pct" id="nav-pct-extra" style="color:var(--color-orange)">0%</span>
-    </div>
-  </div>
-  <div class="sidebar-footer">
-    <div class="deadline-badge">🎯 Goal: Mar 2027</div>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" data-theme-toggle>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    </button>
-  </div>
-</aside>
+    </section>
 
-<!-- MAIN -->
-<main class="main">
-  <!-- DASHBOARD VIEW -->
-  <div class="view active" id="view-dashboard">
-    <div class="topbar">
-      <div class="topbar-title">Dashboard 📊</div>
-      <div class="topbar-actions">
-        <button class="btn btn-ghost" onclick="resetAll()">Reset All</button>
-        <button class="btn btn-primary" onclick="switchView('lectures',document.querySelector('[data-view=lectures]'))">+ Mark Lectures</button>
+    <div class="track-list" id="trackStats"></div>
+
+    <p class="side-note">Progress is saved automatically in this browser with localStorage. Open this HTML after each lecture and click the checkbox.</p>
+    <p class="side-note"><a href="https://100xdevs.com/new-courses/14/content?activeTab=Content" target="_blank" rel="noreferrer">Open 100xDevs course content</a></p>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h2>Lecture Tracker</h2>
+        <div style="color:var(--muted);font-size:13px" id="subline">156 videos loaded</div>
       </div>
-    </div>
+      <div class="actions">
+        <button class="btn" id="themeBtn" type="button">Theme</button>
+        <button class="btn" id="nextBtn" type="button">Next undone</button>
+        <button class="btn" id="exportBtn" type="button">Export</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+      </div>
+    </header>
+
     <div class="content">
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-label">Lectures Done</div>
-          <div class="kpi-value" id="kpi-done" style="color:var(--color-primary)">0</div>
-          <div class="kpi-sub" id="kpi-done-sub">of 253 total</div>
+      <section class="hero">
+        <div class="panel">
+          <h3>Track your Cohort 3.0 progress</h3>
+          <p>This file contains the exact 156 lectures from your pasted list, in course order, with runtimes. Use filters to focus on Web Dev, DevOps, or Web3.</p>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Hours Watched</div>
-          <div class="kpi-value" id="kpi-hours" style="color:var(--color-blue)">0h</div>
-          <div class="kpi-sub">~420h total content</div>
+        <div class="panel">
+          <h3 id="nextTitle">Next lecture</h3>
+          <p id="nextLecture">Start with the first unchecked lecture.</p>
         </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Days Remaining</div>
-          <div class="kpi-value" id="kpi-days" style="color:var(--color-orange)">366</div>
-          <div class="kpi-sub">Deadline: Mar 30, 2027</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Pace Required</div>
-          <div class="kpi-value" id="kpi-pace" style="color:var(--color-warning)">—</div>
-          <div class="kpi-sub" id="kpi-pace-sub">lectures/week</div>
-        </div>
-      </div>
-      <div class="section-heading">Phase Roadmap <span class="badge" style="background:var(--color-primary-highlight);color:var(--color-primary)">12 Months</span></div>
-      <div class="phase-grid" id="phase-grid-dash"></div>
-      <div class="section-heading">Your Activity <span class="badge" style="background:var(--color-surface-offset);color:var(--color-text-muted)">Last 52 weeks</span></div>
-      <div class="streak-row" id="streak-grid"></div>
-    </div>
-  </div>
+      </section>
 
-  <!-- LECTURES VIEW -->
-  <div class="view" id="view-lectures">
-    <div class="topbar">
-      <div class="topbar-title" id="lectures-title">All Lectures 📚</div>
-      <div class="topbar-actions">
-        <span style="font-size:var(--text-xs);color:var(--color-text-muted)" id="lectures-count"></span>
-      </div>
-    </div>
-    <div class="filter-bar">
-      <input class="search-input" type="search" placeholder="Search lectures..." oninput="filterLectures(this.value)" id="search-input">
-      <div class="filter-chip active" onclick="setFilter('all',this)">All</div>
-      <div class="filter-chip" onclick="setFilter('todo',this)">To Do</div>
-      <div class="filter-chip" onclick="setFilter('done',this)">Done ✓</div>
-      <div class="filter-chip" id="fc-webdev" onclick="setFilter('webdev',this)">Web Dev</div>
-      <div class="filter-chip" id="fc-devops" onclick="setFilter('devops',this)">DevOps</div>
-      <div class="filter-chip" id="fc-web3" onclick="setFilter('web3',this)">Web3</div>
-      <div class="filter-chip" id="fc-extra" onclick="setFilter('extra',this)">Extra</div>
-    </div>
-    <div class="content" id="lectures-content" style="padding-top:var(--space-4)"></div>
-  </div>
+      <section class="kpis" aria-label="Progress summary">
+        <div class="kpi"><span>Watched time</span><strong id="watchedTime">0h</strong></div>
+        <div class="kpi"><span>Total runtime</span><strong id="totalTime">315h 39m</strong></div>
+        <div class="kpi"><span>Visible</span><strong id="visibleCount">156</strong></div>
+        <div class="kpi"><span>Remaining time</span><strong id="remainingTime">315h 39m</strong></div>
+      </section>
 
-  <!-- ROADMAP VIEW -->
-  <div class="view" id="view-roadmap">
-    <div class="topbar"><div class="topbar-title">Phase Roadmap 🗺️</div></div>
-    <div class="content">
-      <div class="phase-grid" id="phase-grid-roadmap"></div>
-      <div class="section-heading" style="margin-top:var(--space-4)">Priority Matrix</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-4)">
-        <div class="kpi-card"><div class="kpi-label" style="color:var(--color-success)">🟢 Must Do</div><div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">Web Dev Weeks 1–15<br>DevOps Cohort<br>React + TypeScript<br>Node.js + MongoDB</div></div>
-        <div class="kpi-card"><div class="kpi-label" style="color:var(--color-blue)">🔵 Should Do</div><div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">Web3 / Blockchain<br>Smart Contracts<br>Solana Client Apps<br>Token Launchpad</div></div>
-        <div class="kpi-card"><div class="kpi-label" style="color:var(--color-orange)">🟡 Optional</div><div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">DSA (55 lectures)<br>Superdev Fellowship<br>Ad-hoc extras<br>Offline bonus content</div></div>
-        <div class="kpi-card"><div class="kpi-label" style="color:var(--color-error)">🔴 Skip First</div><div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">Deprecated section<br>Duplicate uploads<br>Cohort 2 duplicates</div></div>
-      </div>
-    </div>
-  </div>
+      <section class="controls" aria-label="Lecture filters">
+        <input class="search" id="search" type="search" placeholder="Search lectures, weeks, topics...">
+        <select class="select" id="statusFilter" aria-label="Status filter">
+          <option value="all">All statuses</option>
+          <option value="todo">To do</option>
+          <option value="done">Done</option>
+        </select>
+        <select class="select" id="trackFilter" aria-label="Track filter">
+          <option value="all">All tracks</option>
+          <option value="webdev">Web Dev</option>
+          <option value="devops">DevOps</option>
+          <option value="web3">Web3 / Blockchain</option>
+          <option value="other">Other</option>
+        </select>
+      </section>
 
-  <!-- SCHEDULE VIEW -->
-  <div class="view" id="view-schedule">
-    <div class="topbar"><div class="topbar-title">Weekly Schedule 📅</div></div>
-    <div class="content">
-      <div class="section-heading">Your 7-Day Study Routine</div>
-      <div class="week-grid" style="margin-bottom:var(--space-8)">
-        <div class="day-card primary"><div class="day-name">Monday</div><div class="day-icon">📺</div><div class="day-task">Watch 1–2 lectures<br>Code along immediately</div></div>
-        <div class="day-card"><div class="day-name">Tuesday</div><div class="day-icon">⌨️</div><div class="day-task">Finish coding task<br>from lecture</div></div>
-        <div class="day-card primary"><div class="day-name">Wednesday</div><div class="day-icon">📺</div><div class="day-task">Watch 1–2 lectures<br>Code along immediately</div></div>
-        <div class="day-card"><div class="day-name">Thursday</div><div class="day-icon">🛠️</div><div class="day-task">Build / extend<br>mini project</div></div>
-        <div class="day-card primary"><div class="day-name">Friday</div><div class="day-icon">📺</div><div class="day-task">Watch 1–2 lectures<br>Push notes to Obsidian</div></div>
-        <div class="day-card" style="border-color:var(--color-success);background:var(--color-success-highlight)"><div class="day-name" style="color:var(--color-success)">Saturday</div><div class="day-icon">🚀</div><div class="day-task">Project Day<br>Build from scratch</div></div>
-        <div class="day-card"><div class="day-name">Sunday</div><div class="day-icon">🔄</div><div class="day-task">Weekly review<br>Push to GitHub</div></div>
-      </div>
-      <div class="section-heading">Key Habits</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-4)">
-        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">💻</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Code Every Lecture</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Never just watch passively. Open your editor and type every line.</div></div>
-        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">🔨</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Build, Don't Copy</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">After watching, close the video and rebuild from memory.</div></div>
-        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">📦</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Daily GitHub Commit</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Even one small commit. Your streak = proof of consistency.</div></div>
-        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">🎯</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Follow the Order</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Web Dev first → DevOps → Web3. Don't skip ahead.</div></div>
-        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">🤖</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Use AI as Tutor</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Ask Perplexity/GPT practice problems after each lecture.</div></div>
-        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">📊</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Sunday Review</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Check your tracker, note what you completed, plan next week.</div></div>
-      </div>
+      <section class="list" id="lectureList" aria-label="Lecture list"></section>
+      <div class="empty" id="emptyState">No lectures match your current filters.</div>
+      <p class="footer">Data source: your pasted Cohort 3.0 lecture list. If new lectures are added later, add them to the LECTURES array near the bottom of this HTML file.</p>
     </div>
-  </div>
-</main>
+  </main>
 </div>
 
 <script>
-// ============================================================
-// DATA
-// ============================================================
-const SECTIONS = [
+const LECTURES = [
   {
-    id:'webdev', name:'Web Development Cohort', color:'var(--color-blue)', light:'var(--color-blue-highlight)',
-    groups:[
-      {name:'Orientation & Warmup',lectures:[
-        {t:'1.1 - Web Dev + Devops Orientation',d:'2h 3m'},{t:'Cohort 2 Warmup - JS Basics',d:'45m'},{t:'Cohort 2 Warmup - Async/Promises',d:'50m'},{t:'Cohort 2 Warmup - Node.js Intro',d:'40m'},
-      ]},
-      {name:'Week 1–2: JS Foundations',lectures:[
-        {t:'1.2 | Javascript Basics',d:'1h 55m'},{t:'2.1 (Web Dev) | Async JS',d:'2h 28m'},{t:'2.2 (Web Dev) | Promises',d:'2h 50m'},{t:'2.3 | Node.js installation, assignments',d:'45m'},{t:'2.4 | Week 1 Assignment | VSCode Landing page',d:'34m'},{t:'2.5 | Promises, async and await',d:'37m'},
-      ]},
-      {name:'Week 2 Offline',lectures:[
-        {t:'Week 2 Offline - Session 1',d:'1h 30m'},{t:'Week 2 Offline - Session 2',d:'1h 20m'},{t:'Week 2 Offline - Session 3',d:'1h 10m'},{t:'Week 2 Offline - Session 4',d:'1h 25m'},{t:'Week 2 Offline - Session 5',d:'1h 15m'},
-      ]},
-      {name:'Week 3–4: DOM & Node',lectures:[
-        {t:'3.1 | DOM Introduction',d:'2h 23m'},{t:'3.2 | DOM Advance',d:'2h 20m'},{t:'4.1 | Node Runtime',d:'2h 23m'},{t:'4.2 | Express',d:'2h 30m'},
-      ]},
-      {name:'Week 4 Offline',lectures:[
-        {t:'Week 4 Offline - Express Deep Dive',d:'1h 45m'},{t:'Week 4 Offline - Middleware & Routing',d:'1h 30m'},
-      ]},
-      {name:'Week 5–6: HTTP & Auth',lectures:[
-        {t:'5.1 | Headers, Query parameters',d:'2h 18m'},{t:'5.2 | Middlewares and cors',d:'2h 5m'},{t:'6.1 | Auth in Node.js, JWTs',d:'2h 45m'},{t:'6.2 | Auth Middleware, localStorage, connecting frontend',d:'2h 25m'},
-      ]},
-      {name:'Week 5 Offline',lectures:[
-        {t:'Week 5 Offline - REST API Design',d:'1h 20m'},{t:'Week 5 Offline - Error Handling',d:'1h 10m'},{t:'Week 5 Offline - Testing APIs',d:'55m'},
-      ]},
-      {name:'Week 6 Offline',lectures:[
-        {t:'Week 6 Offline - JWT Deep Dive',d:'1h 15m'},{t:'Week 6 Offline - Auth Patterns',d:'1h 5m'},
-      ]},
-      {name:'Week 7–8: MongoDB & Zod',lectures:[
-        {t:'7.1 | Databases and MongoDB',d:'2h 8m'},{t:'7.2 | Zod, Hashing passwords and error handling',d:'2h 8m'},{t:'7.2 | Zod, Hashing passwords (Reupload)',d:'2h 8m'},
-      ]},
-      {name:'Week 8 Offline',lectures:[
-        {t:'Week 8 Offline - MongoDB Advanced Queries',d:'1h 40m'},
-      ]},
-      {name:'Weeks 9–12: React & TypeScript',lectures:[
-        {t:'9.1 | React Basics',d:'2h 15m'},{t:'9.2 | React Components & Props',d:'2h 5m'},{t:'10.1 | React Hooks - useState & useEffect',d:'2h 30m'},{t:'10.2 | React Hooks - useMemo, useCallback, useRef',d:'2h 20m'},{t:'11.1 | TypeScript Basics',d:'2h 10m'},{t:'11.2 | TypeScript Advanced',d:'2h 25m'},{t:'12.1 | State Management - Context API',d:'2h'},
-      ]},
-      {name:'Weeks 13–15: Full Stack',lectures:[
-        {t:'13.1 | Tailwind CSS',d:'2h'},{t:'13.2 | Next.js Intro',d:'2h 15m'},{t:'14.1 | Prisma + PostgreSQL',d:'2h 30m'},{t:'14.2 | Full Stack App',d:'2h 45m'},{t:'15.1 | WebSockets',d:'2h'},{t:'15.2 | Turborepo & Monorepos',d:'2h 20m'},
-      ]},
-    ]
+    "id": "lec-001",
+    "n": 1,
+    "title": "How to Join Discord",
+    "duration": "4m 52s",
+    "seconds": 292,
+    "track": "other"
   },
   {
-    id:'devops', name:'DevOps Cohort', color:'var(--color-success)', light:'var(--color-success-highlight)',
-    groups:[
-      {name:'Getting Started',lectures:[
-        {t:'DevOps Orientation',d:'1h 30m'},{t:'Linux Basics & Shell Scripting',d:'2h'},
-      ]},
-      {name:'Docker & Containers',lectures:[
-        {t:'Docker Intro & Installation',d:'2h 10m'},{t:'Docker Images & Containers',d:'2h 30m'},{t:'Docker Compose',d:'2h 15m'},{t:'Docker Networking',d:'1h 45m'},{t:'Docker Volumes & Persistence',d:'1h 30m'},
-      ]},
-      {name:'CI/CD',lectures:[
-        {t:'GitHub Actions Basics',d:'2h'},{t:'CI/CD Pipeline Setup',d:'2h 20m'},{t:'Automated Testing in CI',d:'1h 50m'},{t:'Docker in CI/CD',d:'1h 40m'},
-      ]},
-      {name:'AWS Cloud',lectures:[
-        {t:'AWS Intro & IAM',d:'2h'},{t:'EC2 & VPC',d:'2h 30m'},{t:'S3 & CloudFront',d:'1h 50m'},{t:'RDS & Databases on AWS',d:'2h 10m'},{t:'Load Balancers & Auto Scaling',d:'2h'},{t:'AWS Lambda & Serverless',d:'1h 45m'},
-      ]},
-      {name:'Kubernetes',lectures:[
-        {t:'Kubernetes Intro & Architecture',d:'2h 15m'},{t:'Pods, Deployments & Services',d:'2h 30m'},{t:'Kubernetes Networking',d:'2h'},{t:'Helm Charts',d:'1h 45m'},{t:'Kubernetes on AWS (EKS)',d:'2h 20m'},
-      ]},
-      {name:'Monitoring & More',lectures:[
-        {t:'Prometheus & Grafana',d:'2h'},{t:'Logging with ELK Stack',d:'1h 50m'},{t:'Nginx & Reverse Proxy',d:'1h 40m'},{t:'SSL/TLS & HTTPS',d:'1h 30m'},{t:'Infrastructure as Code - Terraform',d:'2h 10m'},{t:'DevOps Capstone Project',d:'2h 30m'},
-      ]},
-      {name:'Extras',lectures:[
-        {t:'DevOps Extra - Advanced Docker',d:'1h 20m'},{t:'DevOps Extra - Kubernetes Advanced',d:'1h 30m'},
-      ]},
-    ]
+    "id": "lec-002",
+    "n": 2,
+    "title": "Web3 1.1 - Orientation (Part 1)",
+    "duration": "1h 14m 3s",
+    "seconds": 4443,
+    "track": "web3"
   },
   {
-    id:'web3', name:'Web3 / Blockchain Cohort', color:'var(--color-purple)', light:'var(--color-purple-highlight)',
-    groups:[
-      {name:'Orientation & Cryptography',lectures:[
-        {t:'Web3 1.1 - Orientation (Part 1)',d:'1h 14m'},{t:'Web3 1.1 - Orientation (Part 2)',d:'1h 27m'},{t:'1.2 | Bitcoin Whitepaper',d:'57m'},{t:'2.1 | Public Key Cryptography',d:'2h 54m'},{t:'[Web3] 2.2 | Public Key Cryptography (from scratch)',d:'2h 2m'},
-      ]},
-      {name:'Wallets & Solana Basics',lectures:[
-        {t:'[Web3] 3.1 | How to create a Web based wallet',d:'2h 33m'},{t:'[Web3] 4.1 | Token Program and Solana Data model',d:'2h'},{t:'[Web3] 4.2 | Programs, Smart contracts (Offline)',d:'2h 25m'},
-      ]},
-      {name:'Solana Client Apps',lectures:[
-        {t:'[Web3] 5.1 | Solana client side apps',d:'2h 32m'},{t:'6.1 | Token Launchpad in React',d:'2h 7m'},{t:'[Web3] 7.1 - Accounts, Authorities and Owners',d:'1h 15m'},{t:'[Web3] 8.2 (offline) - Wallet Adapter from scratch',d:'1h 34m'},
-      ]},
-      {name:'Ethereum & Smart Contracts',lectures:[
-        {t:'Ethereum Basics & EVM',d:'2h 10m'},{t:'Solidity Intro',d:'2h 30m'},{t:'Smart Contract Patterns',d:'2h 15m'},{t:'ERC-20 Tokens',d:'1h 50m'},{t:'ERC-721 NFTs',d:'2h'},{t:'DeFi Concepts',d:'1h 45m'},
-      ]},
-      {name:'Advanced Web3',lectures:[
-        {t:'Web3.js & Ethers.js',d:'2h 5m'},{t:'IPFS & Decentralized Storage',d:'1h 40m'},{t:'Hardhat & Testing Smart Contracts',d:'2h 20m'},{t:'Web3 Deployment & Mainnet',d:'1h 55m'},{t:'Web3 Security',d:'2h'},{t:'Building a DEX UI',d:'2h 15m'},{t:'Building a Lending Protocol',d:'2h 30m'},{t:'Web3 Capstone',d:'2h 45m'},
-      ]},
-    ]
+    "id": "lec-003",
+    "n": 3,
+    "title": "Web3 1.1 - Orientation (Part 2)",
+    "duration": "1h 27m 21s",
+    "seconds": 5241,
+    "track": "web3"
   },
   {
-    id:'extra', name:'Extra Content (Optional)', color:'var(--color-orange)', light:'var(--color-orange-highlight)',
-    groups:[
-      {name:'Superdev Fellowship',lectures:[
-        {t:'Superdev Fellowship - Session 1',d:'1h 30m'},{t:'Superdev Fellowship - Session 2',d:'1h 25m'},{t:'Superdev Fellowship - Session 3',d:'1h 35m'},{t:'Superdev Fellowship - Session 4',d:'1h 20m'},{t:'Superdev Fellowship - Session 5',d:'1h 40m'},{t:'Superdev Fellowship - Session 6',d:'1h 30m'},{t:'Superdev Fellowship - Session 7',d:'1h 25m'},{t:'Superdev Fellowship - Session 8',d:'1h 35m'},{t:'Superdev Fellowship - Session 9',d:'1h 20m'},{t:'Superdev Fellowship - Session 10',d:'1h 30m'},{t:'Superdev Fellowship - Session 11',d:'1h 25m'},{t:'Superdev Fellowship - Session 12',d:'1h 40m'},
-      ]},
-      {name:'Cohort 2 Offline',lectures:[
-        {t:'Cohort 2 Offline - 1',d:'2h'},{t:'Cohort 2 Offline - 2',d:'1h 50m'},{t:'Cohort 2 Offline - 3',d:'2h 10m'},{t:'Cohort 2 Offline - 4',d:'1h 45m'},{t:'Cohort 2 Offline - 5',d:'2h'},{t:'Cohort 2 Offline - 6',d:'1h 55m'},{t:'Cohort 2 Offline - 7',d:'2h 5m'},{t:'Cohort 2 Offline - 8',d:'1h 50m'},{t:'Cohort 2 Offline - 9',d:'2h'},{t:'Cohort 2 Offline - 10',d:'1h 45m'},{t:'Cohort 2 Offline - 11',d:'2h 10m'},{t:'Cohort 2 Offline - 12',d:'1h 55m'},{t:'Cohort 2 Offline - 13',d:'2h'},
-      ]},
-      {name:'DSA (Data Structures & Algorithms)',lectures:[
-        {t:'DSA 1 - Arrays & Strings',d:'2h'},{t:'DSA 2 - Two Pointers',d:'1h 45m'},{t:'DSA 3 - Sliding Window',d:'1h 50m'},{t:'DSA 4 - Hashing',d:'2h'},{t:'DSA 5 - Recursion',d:'2h 15m'},{t:'DSA 6 - Binary Search',d:'1h 55m'},{t:'DSA 7 - Sorting Algorithms',d:'2h'},{t:'DSA 8 - Linked Lists',d:'2h 10m'},{t:'DSA 9 - Stacks & Queues',d:'1h 50m'},{t:'DSA 10 - Trees',d:'2h 20m'},{t:'DSA 11 - BST',d:'2h'},{t:'DSA 12 - Heaps',d:'1h 55m'},{t:'DSA 13 - Graphs Introduction',d:'2h 10m'},{t:'DSA 14 - BFS',d:'1h 45m'},{t:'DSA 15 - DFS',d:'1h 50m'},{t:'DSA 16 - Dynamic Programming Intro',d:'2h 20m'},{t:'DSA 17 - DP Patterns',d:'2h 30m'},{t:'DSA 18 - Tries',d:'1h 40m'},{t:'DSA 19 - Segment Trees',d:'2h'},{t:'DSA 20 - Competitive Programming',d:'1h 55m'},
-      ]},
-      {name:'Ad-hoc & Misc',lectures:[
-        {t:'Ad-hoc - System Design Basics',d:'2h'},{t:'Ad-hoc - Backend at Scale',d:'1h 50m'},{t:'Ad-hoc - Redis & Caching',d:'1h 45m'},{t:'Ad-hoc - Message Queues',d:'1h 40m'},{t:'Ad-hoc - Microservices',d:'2h'},{t:'Ad-hoc - gRPC',d:'1h 30m'},{t:'Ad-hoc - GraphQL',d:'1h 55m'},{t:'Ad-hoc - Interview Prep',d:'1h 45m'},{t:'Ad-hoc - Resume Building',d:'1h'},{t:'Ad-hoc - Freelancing Tips',d:'55m'},
-      ]},
-    ]
+    "id": "lec-004",
+    "n": 4,
+    "title": "1.1 - Web Dev + Devops Orientation",
+    "duration": "2h 2m 46s",
+    "seconds": 7366,
+    "track": "devops"
   },
+  {
+    "id": "lec-005",
+    "n": 5,
+    "title": "DEX, AMMs and Liquidity pools [Cohort 3]",
+    "duration": "2h 36m 49s",
+    "seconds": 9409,
+    "track": "web3"
+  },
+  {
+    "id": "lec-006",
+    "n": 6,
+    "title": "1.2 | Javascript Basics",
+    "duration": "1h 55m 29s",
+    "seconds": 6929,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-007",
+    "n": 7,
+    "title": "2.1(Web3) | Public Key Cryptography",
+    "duration": "2h 54m 10s",
+    "seconds": 10450,
+    "track": "web3"
+  },
+  {
+    "id": "lec-008",
+    "n": 8,
+    "title": "2.1 (Web Dev) | Async JS",
+    "duration": "2h 27m 35s",
+    "seconds": 8855,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-009",
+    "n": 9,
+    "title": "2.2 (Web Dev) | Promises",
+    "duration": "2h 50m 27s",
+    "seconds": 10227,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-010",
+    "n": 10,
+    "title": "2.3 | Node.js installation, Week 2 assignments",
+    "duration": "45m 3s",
+    "seconds": 2703,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-011",
+    "n": 11,
+    "title": "2.4 | Week 1 Assignment - VSCode Landing page",
+    "duration": "34m 26s",
+    "seconds": 2066,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-012",
+    "n": 12,
+    "title": "2.5 | Promises, async and await",
+    "duration": "37m 5s",
+    "seconds": 2225,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-013",
+    "n": 13,
+    "title": "[Web3] 2.2 | Public key cryptography (from scratch)",
+    "duration": "2h 2m 18s",
+    "seconds": 7338,
+    "track": "web3"
+  },
+  {
+    "id": "lec-014",
+    "n": 14,
+    "title": "1.2 | Bitcoin Whitepaper",
+    "duration": "56m 47s",
+    "seconds": 3407,
+    "track": "web3"
+  },
+  {
+    "id": "lec-015",
+    "n": 15,
+    "title": "[Web3] 3.1 | Web based wallet",
+    "duration": "2h 32m 41s",
+    "seconds": 9161,
+    "track": "web3"
+  },
+  {
+    "id": "lec-016",
+    "n": 16,
+    "title": "3.1 | DOM Introduction",
+    "duration": "2h 22m 47s",
+    "seconds": 8567,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-017",
+    "n": 17,
+    "title": "3.2 | DOM Advance",
+    "duration": "2h 20m 9s",
+    "seconds": 8409,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-018",
+    "n": 18,
+    "title": "4.1 | Node Runtime",
+    "duration": "2h 22m 48s",
+    "seconds": 8568,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-019",
+    "n": 19,
+    "title": "4.2 | Express",
+    "duration": "2h 30m 22s",
+    "seconds": 9022,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-020",
+    "n": 20,
+    "title": "[Web3] 4.1 | Token Program, Solana Data model",
+    "duration": "1h 59m 38s",
+    "seconds": 7178,
+    "track": "web3"
+  },
+  {
+    "id": "lec-021",
+    "n": 21,
+    "title": "[Web3] 4.2 | Smart contracts, Token program",
+    "duration": "2h 24m 33s",
+    "seconds": 8673,
+    "track": "web3"
+  },
+  {
+    "id": "lec-022",
+    "n": 22,
+    "title": "[Web3] 5.1 | Solana client side apps",
+    "duration": "2h 32m 1s",
+    "seconds": 9121,
+    "track": "web3"
+  },
+  {
+    "id": "lec-023",
+    "n": 23,
+    "title": "5.1 | Headers, Query parameters",
+    "duration": "2h 18m 29s",
+    "seconds": 8309,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-024",
+    "n": 24,
+    "title": "5.2 | Middlewares and cors",
+    "duration": "2h 4m 33s",
+    "seconds": 7473,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-025",
+    "n": 25,
+    "title": "6.1 | Token Launchpad in React",
+    "duration": "2h 7m 15s",
+    "seconds": 7635,
+    "track": "web3"
+  },
+  {
+    "id": "lec-026",
+    "n": 26,
+    "title": "6.1 | Auth in Node.js, JWTs",
+    "duration": "2h 44m 54s",
+    "seconds": 9894,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-027",
+    "n": 27,
+    "title": "6.2 | Auth Middleware, localStorage",
+    "duration": "2h 24m 30s",
+    "seconds": 8670,
+    "track": "web3"
+  },
+  {
+    "id": "lec-028",
+    "n": 28,
+    "title": "[Web3] 7.1 | Accounts, Authorities, Owners",
+    "duration": "1h 15m 1s",
+    "seconds": 4501,
+    "track": "web3"
+  },
+  {
+    "id": "lec-029",
+    "n": 29,
+    "title": "7.1 | Databases and MongoDB",
+    "duration": "2h 7m 43s",
+    "seconds": 7663,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-030",
+    "n": 30,
+    "title": "7.2 | Zod, Hashing passwords",
+    "duration": "2h 7m 52s",
+    "seconds": 7672,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-031",
+    "n": 31,
+    "title": "7.2 (Reupload) | Zod, Hashing passwords",
+    "duration": "2h 7m 51s",
+    "seconds": 7671,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-032",
+    "n": 32,
+    "title": "[Web3] 8.2 | Wallet Adapter from scratch",
+    "duration": "1h 33m 42s",
+    "seconds": 5622,
+    "track": "web3"
+  },
+  {
+    "id": "lec-033",
+    "n": 33,
+    "title": "[Web3] 8.3 | React Token Launchpad",
+    "duration": "1h 10m 32s",
+    "seconds": 4232,
+    "track": "web3"
+  },
+  {
+    "id": "lec-034",
+    "n": 34,
+    "title": "[Web3] 8.1 | Program Derived Addresses",
+    "duration": "2h 21m 49s",
+    "seconds": 8509,
+    "track": "web3"
+  },
+  {
+    "id": "lec-035",
+    "n": 35,
+    "title": "8.1 | Course selling app Part 1",
+    "duration": "2h 14m 29s",
+    "seconds": 8069,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-036",
+    "n": 36,
+    "title": "8.2 | Course selling app Part 2",
+    "duration": "2h 16m 17s",
+    "seconds": 8177,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-037",
+    "n": 37,
+    "title": "Mongo Deep dive",
+    "duration": "2h 9m 56s",
+    "seconds": 7796,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-038",
+    "n": 38,
+    "title": "9.1 | React Part 1 - Foundations",
+    "duration": "2h 2m 45s",
+    "seconds": 7365,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-039",
+    "n": 39,
+    "title": "9.2 | useState, useEffect",
+    "duration": "2h 14m 30s",
+    "seconds": 8070,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-040",
+    "n": 40,
+    "title": "9.2 (offline) | React Part 1",
+    "duration": "2h 24m 35s",
+    "seconds": 8675,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-041",
+    "n": 41,
+    "title": "9.4 (offline) | Lists, lifecycle, error boundaries",
+    "duration": "55m 16s",
+    "seconds": 3316,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-042",
+    "n": 42,
+    "title": "[Web3] 10.1 | ETH, EVM, bytecode",
+    "duration": "2h 8m 27s",
+    "seconds": 7707,
+    "track": "web3"
+  },
+  {
+    "id": "lec-043",
+    "n": 43,
+    "title": "10.1 | useRef, Routing in React",
+    "duration": "1h 56m 5s",
+    "seconds": 6965,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-044",
+    "n": 44,
+    "title": "10.2 | Context API, Prop drilling",
+    "duration": "1h 34m 15s",
+    "seconds": 5655,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-045",
+    "n": 45,
+    "title": "11.1 | Eth Wallet Adapters",
+    "duration": "1h 57m 40s",
+    "seconds": 7060,
+    "track": "web3"
+  },
+  {
+    "id": "lec-046",
+    "n": 46,
+    "title": "11.1 | Custom Hooks",
+    "duration": "2h 15m 3s",
+    "seconds": 8103,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-047",
+    "n": 47,
+    "title": "11.2 | State management - Recoil",
+    "duration": "2h 21m 48s",
+    "seconds": 8508,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-048",
+    "n": 48,
+    "title": "11.3 (offline) | Recoil Deep dive",
+    "duration": "1h 33m 36s",
+    "seconds": 5616,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-049",
+    "n": 49,
+    "title": "[Web3] 12.1 | Impermanent loss, Liquidity pool",
+    "duration": "2h 1m 34s",
+    "seconds": 7294,
+    "track": "web3"
+  },
+  {
+    "id": "lec-050",
+    "n": 50,
+    "title": "Week 12.1 | UI/UX Primitives Part 1",
+    "duration": "2h 29m 1s",
+    "seconds": 8941,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-051",
+    "n": 51,
+    "title": "Week 12.2 | UI/UX Primitives Part 2",
+    "duration": "2h 17m 27s",
+    "seconds": 8247,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-052",
+    "n": 52,
+    "title": "[Web3] 13.1 | LSTs, LST platform",
+    "duration": "2h 2m 21s",
+    "seconds": 7341,
+    "track": "web3"
+  },
+  {
+    "id": "lec-053",
+    "n": 53,
+    "title": "Week 13.1 | Tailwind, ref arrays",
+    "duration": "2h 12m 13s",
+    "seconds": 7933,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-054",
+    "n": 54,
+    "title": "Week 13.2 | Tailwind Part 2, sidebars",
+    "duration": "2h 3m 56s",
+    "seconds": 7436,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-055",
+    "n": 55,
+    "title": "[Web3] 14.1 | Private key management",
+    "duration": "2h 31m 12s",
+    "seconds": 9072,
+    "track": "web3"
+  },
+  {
+    "id": "lec-056",
+    "n": 56,
+    "title": "Week 14.1 | Typescript Part 1",
+    "duration": "2h 24m 14s",
+    "seconds": 8654,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-057",
+    "n": 57,
+    "title": "Week 14.2 | Types, Interfaces",
+    "duration": "2h 31m 13s",
+    "seconds": 9073,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-058",
+    "n": 58,
+    "title": "Week 14.3 | Typescript Advance APIs",
+    "duration": "41m 54s",
+    "seconds": 2514,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-059",
+    "n": 59,
+    "title": "[Web3] 15.1 | Intro to Solidity",
+    "duration": "2h 14m 56s",
+    "seconds": 8096,
+    "track": "web3"
+  },
+  {
+    "id": "lec-060",
+    "n": 60,
+    "title": "[Web3] 15.2 | Solidity Part 2",
+    "duration": "1h 11m 9s",
+    "seconds": 4269,
+    "track": "web3"
+  },
+  {
+    "id": "lec-061",
+    "n": 61,
+    "title": "Week 15.1 | Second brain app",
+    "duration": "2h 0m 55s",
+    "seconds": 7255,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-062",
+    "n": 62,
+    "title": "Week 15.2 | UI Library, Button component",
+    "duration": "2h 2m 57s",
+    "seconds": 7377,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-063",
+    "n": 63,
+    "title": "15.3 | Brainly end to end",
+    "duration": "3h 21m 33s",
+    "seconds": 12093,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-064",
+    "n": 64,
+    "title": "[Web3] 16.1 | Payable, CCIs in Eth",
+    "duration": "1h 46m 4s",
+    "seconds": 6364,
+    "track": "web3"
+  },
+  {
+    "id": "lec-065",
+    "n": 65,
+    "title": "Week 16.1 | Websockets",
+    "duration": "2h 4m 18s",
+    "seconds": 7458,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-066",
+    "n": 66,
+    "title": "16.2 | Chat app",
+    "duration": "2h 10m 41s",
+    "seconds": 7841,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-067",
+    "n": 67,
+    "title": "[Web3] 17.1 | ERC-20, OpenZeplin",
+    "duration": "2h 11m 59s",
+    "seconds": 7919,
+    "track": "web3"
+  },
+  {
+    "id": "lec-068",
+    "n": 68,
+    "title": "Week 17.1 | Postgres and SQL",
+    "duration": "2h 29m 55s",
+    "seconds": 8995,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-069",
+    "n": 69,
+    "title": "Week 17.2 | Postgres Part 2",
+    "duration": "1h 59m 40s",
+    "seconds": 7180,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-070",
+    "n": 70,
+    "title": "[Web3] 18.1 | Hardhat, Ganache, Foundry",
+    "duration": "2h 24m 22s",
+    "seconds": 8662,
+    "track": "web3"
+  },
+  {
+    "id": "lec-071",
+    "n": 71,
+    "title": "18.1 | Prisma and ORMs",
+    "duration": "2h 1m 58s",
+    "seconds": 7318,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-072",
+    "n": 72,
+    "title": "Week 18.2 | Starting NextJs, SSR",
+    "duration": "2h 1m 38s",
+    "seconds": 7298,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-073",
+    "n": 73,
+    "title": "[Web3] 19.1 | Bridges, EVM bridge",
+    "duration": "1h 49m 7s",
+    "seconds": 6547,
+    "track": "web3"
+  },
+  {
+    "id": "lec-074",
+    "n": 74,
+    "title": "Week 19.1 | NextJS continuation",
+    "duration": "2h 24m 27s",
+    "seconds": 8667,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-075",
+    "n": 75,
+    "title": "WEB3 Week 20 | Building a Bridge",
+    "duration": "1h 58m 39s",
+    "seconds": 7119,
+    "track": "web3"
+  },
+  {
+    "id": "lec-076",
+    "n": 76,
+    "title": "Week 20.1 | Next.js Continued",
+    "duration": "2h 16m 9s",
+    "seconds": 8169,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-077",
+    "n": 77,
+    "title": "Week 20.2 | NextAuth",
+    "duration": "2h 15m 3s",
+    "seconds": 8103,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-078",
+    "n": 78,
+    "title": "[Web3] 21.1 | Client Side ETH",
+    "duration": "2h 31m 19s",
+    "seconds": 9079,
+    "track": "web3"
+  },
+  {
+    "id": "lec-079",
+    "n": 79,
+    "title": "Week 21.1 | Monorepos, turborepo",
+    "duration": "2h 8m 55s",
+    "seconds": 7735,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-080",
+    "n": 80,
+    "title": "Week 21.2 | Monorepos Continued",
+    "duration": "2h 20m 50s",
+    "seconds": 8450,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-081",
+    "n": 81,
+    "title": "Week 21.2 (Better Quality) | Monorepos Continued",
+    "duration": "2h 3m 25s",
+    "seconds": 7405,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-082",
+    "n": 82,
+    "title": "[Web3] Week 22 | Upgradability in ETH",
+    "duration": "2h 35m 58s",
+    "seconds": 9358,
+    "track": "web3"
+  },
+  {
+    "id": "lec-083",
+    "n": 83,
+    "title": "[Web3] Week 22.1 | Proxy staking contract",
+    "duration": "2h 2m 26s",
+    "seconds": 7346,
+    "track": "web3"
+  },
+  {
+    "id": "lec-084",
+    "n": 84,
+    "title": "Week 22.1 | Excalidraw Project #1",
+    "duration": "2h 20m 13s",
+    "seconds": 8413,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-085",
+    "n": 85,
+    "title": "Week 22.2 | Excalidraw Part 2",
+    "duration": "2h 59m 40s",
+    "seconds": 10780,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-086",
+    "n": 86,
+    "title": "[Web3] 23.1 | Upgradable staking contracts",
+    "duration": "2h 12m 17s",
+    "seconds": 7937,
+    "track": "web3"
+  },
+  {
+    "id": "lec-087",
+    "n": 87,
+    "title": "Week 23.1 | Excalidraw Part 3",
+    "duration": "2h 38m 28s",
+    "seconds": 9508,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-088",
+    "n": 88,
+    "title": "Week 23.2 | Excalidraw Part 4",
+    "duration": "2h 17m 57s",
+    "seconds": 8277,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-089",
+    "n": 89,
+    "title": "[Web3] 24.1 | ETH end to end app",
+    "duration": "2h 21m 49s",
+    "seconds": 8509,
+    "track": "web3"
+  },
+  {
+    "id": "lec-090",
+    "n": 90,
+    "title": "[Devops] Week 24.1 | Starting Devops, VMs",
+    "duration": "2h 31m 26s",
+    "seconds": 9086,
+    "track": "devops"
+  },
+  {
+    "id": "lec-091",
+    "n": 91,
+    "title": "[Devops] Week 24.2 | Reverse Proxies, Deployment",
+    "duration": "1h 53m 49s",
+    "seconds": 6829,
+    "track": "devops"
+  },
+  {
+    "id": "lec-092",
+    "n": 92,
+    "title": "Birthday Special | Starting Solana",
+    "duration": "35m 56s",
+    "seconds": 2156,
+    "track": "web3"
+  },
+  {
+    "id": "lec-093",
+    "n": 93,
+    "title": "Week 25 | Process management, CI/CD 1/2",
+    "duration": "2h 2m 9s",
+    "seconds": 7329,
+    "track": "devops"
+  },
+  {
+    "id": "lec-094",
+    "n": 94,
+    "title": "Week 25 | CI, certificate management 2/2",
+    "duration": "3h 30m 45s",
+    "seconds": 12645,
+    "track": "devops"
+  },
+  {
+    "id": "lec-095",
+    "n": 95,
+    "title": "25.3 [Cohort-2] | Certificate Management",
+    "duration": "54m",
+    "seconds": 3240,
+    "track": "devops"
+  },
+  {
+    "id": "lec-096",
+    "n": 96,
+    "title": "[Web3] 26.1 | Rust Bootcamp Part 1",
+    "duration": "2h 3m 57s",
+    "seconds": 7437,
+    "track": "web3"
+  },
+  {
+    "id": "lec-097",
+    "n": 97,
+    "title": "Week 26.1 | Starting Docker",
+    "duration": "2h 15m 13s",
+    "seconds": 8113,
+    "track": "devops"
+  },
+  {
+    "id": "lec-098",
+    "n": 98,
+    "title": "Week 26.2 | Docker Part 2",
+    "duration": "2h 16m 34s",
+    "seconds": 8194,
+    "track": "devops"
+  },
+  {
+    "id": "lec-099",
+    "n": 99,
+    "title": "[Web3] 27.1 | Rust Bootcamp Part 2",
+    "duration": "2h 2m 47s",
+    "seconds": 7367,
+    "track": "web3"
+  },
+  {
+    "id": "lec-100",
+    "n": 100,
+    "title": "Week 27.1 | Docker compose, CI/CD",
+    "duration": "2h 40m 8s",
+    "seconds": 9608,
+    "track": "devops"
+  },
+  {
+    "id": "lec-101",
+    "n": 101,
+    "title": "Week 27.2 | Deploying monorepo via Docker",
+    "duration": "2h 35m 17s",
+    "seconds": 9317,
+    "track": "devops"
+  },
+  {
+    "id": "lec-102",
+    "n": 102,
+    "title": "[Web3] 28.1 | Rust Part 3",
+    "duration": "2h 21m 40s",
+    "seconds": 8500,
+    "track": "web3"
+  },
+  {
+    "id": "lec-103",
+    "n": 103,
+    "title": "Week 28.1 | Vertical/horizontal scaling, ASGs",
+    "duration": "2h 11m 23s",
+    "seconds": 7883,
+    "track": "devops"
+  },
+  {
+    "id": "lec-104",
+    "n": 104,
+    "title": "Week 28.2 | Autoscaling Groups",
+    "duration": "2h 27m 35s",
+    "seconds": 8855,
+    "track": "devops"
+  },
+  {
+    "id": "lec-105",
+    "n": 105,
+    "title": "[Web3] 29.1 | Deriving macros, serde, borsh",
+    "duration": "2h 1m 51s",
+    "seconds": 7311,
+    "track": "web3"
+  },
+  {
+    "id": "lec-106",
+    "n": 106,
+    "title": "Week 29.1 | Autoscaling orchestrator - Bolt",
+    "duration": "2h 32m 7s",
+    "seconds": 9127,
+    "track": "devops"
+  },
+  {
+    "id": "lec-107",
+    "n": 107,
+    "title": "[Web3] 30.1 | First Solana program",
+    "duration": "2h 19m 10s",
+    "seconds": 8350,
+    "track": "web3"
+  },
+  {
+    "id": "lec-108",
+    "n": 108,
+    "title": "Week 30.1 | AWS ECR, ECS, orchestration",
+    "duration": "2h 29m 50s",
+    "seconds": 8990,
+    "track": "devops"
+  },
+  {
+    "id": "lec-109",
+    "n": 109,
+    "title": "Week 30.2 | Monitoring, Newrelic",
+    "duration": "2h 5m 18s",
+    "seconds": 7518,
+    "track": "devops"
+  },
+  {
+    "id": "lec-110",
+    "n": 110,
+    "title": "Week 31.1 | Prometheus and Grafana",
+    "duration": "2h 7m 53s",
+    "seconds": 7673,
+    "track": "web3"
+  },
+  {
+    "id": "lec-111",
+    "n": 111,
+    "title": "[Web3] 31.1 | Solana native contracts in Rust",
+    "duration": "2h 11m 5s",
+    "seconds": 7865,
+    "track": "web3"
+  },
+  {
+    "id": "lec-112",
+    "n": 112,
+    "title": "Week 32.1 | Prometheus/Grafana Part 2",
+    "duration": "2h 14m 11s",
+    "seconds": 8051,
+    "track": "web3"
+  },
+  {
+    "id": "lec-113",
+    "n": 113,
+    "title": "[Web3] 32.1 | JS clients for smart contracts",
+    "duration": "2h 0m 19s",
+    "seconds": 7219,
+    "track": "web3"
+  },
+  {
+    "id": "lec-114",
+    "n": 114,
+    "title": "Week 33.1 | Serverless",
+    "duration": "2h 11m 4s",
+    "seconds": 7864,
+    "track": "devops"
+  },
+  {
+    "id": "lec-115",
+    "n": 115,
+    "title": "Week 33.2 | Kubernetes Architecture",
+    "duration": "1h 48m 48s",
+    "seconds": 6528,
+    "track": "devops"
+  },
+  {
+    "id": "lec-116",
+    "n": 116,
+    "title": "[Web3] 33.1 | Coin flip game on Solana",
+    "duration": "1h 58m 12s",
+    "seconds": 7092,
+    "track": "web3"
+  },
+  {
+    "id": "lec-117",
+    "n": 117,
+    "title": "Week 34.1 | Kubernetes Part 2",
+    "duration": "2h 15m 11s",
+    "seconds": 8111,
+    "track": "devops"
+  },
+  {
+    "id": "lec-118",
+    "n": 118,
+    "title": "Week 34.2 | Kubernetes Part 3",
+    "duration": "1h 56m 29s",
+    "seconds": 6989,
+    "track": "devops"
+  },
+  {
+    "id": "lec-119",
+    "n": 119,
+    "title": "[Web3] 34.1 | PDAs in Solana",
+    "duration": "1h 56m 2s",
+    "seconds": 6962,
+    "track": "web3"
+  },
+  {
+    "id": "lec-120",
+    "n": 120,
+    "title": "Week 35.1 | Namespaces, clusterip, ingress",
+    "duration": "2h 16m 16s",
+    "seconds": 8176,
+    "track": "devops"
+  },
+  {
+    "id": "lec-121",
+    "n": 121,
+    "title": "Week 35.1 | CPIs and liteSVM",
+    "duration": "33m 37s",
+    "seconds": 2017,
+    "track": "web3"
+  },
+  {
+    "id": "lec-122",
+    "n": 122,
+    "title": "Week 36.1 | Secrets, configmaps, ingress",
+    "duration": "1h 53m",
+    "seconds": 6780,
+    "track": "devops"
+  },
+  {
+    "id": "lec-123",
+    "n": 123,
+    "title": "Week 36.2 | Secrets/Configmap Part 2",
+    "duration": "2h 0m 16s",
+    "seconds": 7216,
+    "track": "devops"
+  },
+  {
+    "id": "lec-124",
+    "n": 124,
+    "title": "Week 36.2 | PV and PVC (offline)",
+    "duration": "1h 26m",
+    "seconds": 5160,
+    "track": "devops"
+  },
+  {
+    "id": "lec-125",
+    "n": 125,
+    "title": "Week 36.2 | CPI (Offline)",
+    "duration": "1h 53m 31s",
+    "seconds": 6811,
+    "track": "web3"
+  },
+  {
+    "id": "lec-126",
+    "n": 126,
+    "title": "[WEB3] Week 37 | PDAs, bumps, invoke_signed",
+    "duration": "2h 24m 43s",
+    "seconds": 8683,
+    "track": "web3"
+  },
+  {
+    "id": "lec-127",
+    "n": 127,
+    "title": "Week 37.1 | HPA, node autoscaler",
+    "duration": "2h 6m 23s",
+    "seconds": 7583,
+    "track": "devops"
+  },
+  {
+    "id": "lec-128",
+    "n": 128,
+    "title": "Week 37.2 | ArgoCD and GitOps",
+    "duration": "2h 13m 22s",
+    "seconds": 8002,
+    "track": "devops"
+  },
+  {
+    "id": "lec-129",
+    "n": 129,
+    "title": "Week 38 | Helm",
+    "duration": "1h 17m 33s",
+    "seconds": 4653,
+    "track": "devops"
+  },
+  {
+    "id": "lec-130",
+    "n": 130,
+    "title": "[Web3] Week 38 | Anchor vs Raw Contracts",
+    "duration": "2h 17m 57s",
+    "seconds": 8277,
+    "track": "web3"
+  },
+  {
+    "id": "lec-131",
+    "n": 131,
+    "title": "[Web3] Week 39 | Anchor 2 - CPIs, PDAs",
+    "duration": "1h 35m 22s",
+    "seconds": 5722,
+    "track": "web3"
+  },
+  {
+    "id": "lec-132",
+    "n": 132,
+    "title": "[Web3] Week 40 | PDAs in anchor, staking",
+    "duration": "1h 24m 45s",
+    "seconds": 5085,
+    "track": "web3"
+  },
+  {
+    "id": "lec-133",
+    "n": 133,
+    "title": "[WEB3] Week 41.1 | Private key management",
+    "duration": "2h 18m 41s",
+    "seconds": 8321,
+    "track": "web3"
+  },
+  {
+    "id": "lec-134",
+    "n": 134,
+    "title": "Week 39 | Creating betterstack",
+    "duration": "2h 8m 22s",
+    "seconds": 7702,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-135",
+    "n": 135,
+    "title": "Week 40.1 | Betterstack in Rust",
+    "duration": "3h 5m 4s",
+    "seconds": 11104,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-136",
+    "n": 136,
+    "title": "Week 41.1 | Project Review Class",
+    "duration": "2h 12m 38s",
+    "seconds": 7958,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-137",
+    "n": 137,
+    "title": "Week 41.2 | Betterstack Part 3",
+    "duration": "1h 58m 9s",
+    "seconds": 7089,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-138",
+    "n": 138,
+    "title": "Week 42.1 | Redis streams, Betterstack Part 4",
+    "duration": "1h 32m 24s",
+    "seconds": 5544,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-139",
+    "n": 139,
+    "title": "[WEB3] Week 43.1 | Cloud wallet",
+    "duration": "4h 1m 5s",
+    "seconds": 14465,
+    "track": "web3"
+  },
+  {
+    "id": "lec-140",
+    "n": 140,
+    "title": "Week 43.1 | Worker, Pusher with redis streams",
+    "duration": "55m 51s",
+    "seconds": 3351,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-141",
+    "n": 141,
+    "title": "Week 43.2 | Finishing the frontend",
+    "duration": "53m",
+    "seconds": 3180,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-142",
+    "n": 142,
+    "title": "Week 44 | Scaling HTTP/WS Servers",
+    "duration": "1h 51m 10s",
+    "seconds": 6670,
+    "track": "devops"
+  },
+  {
+    "id": "lec-143",
+    "n": 143,
+    "title": "Week 45.1 | OpenAPI spec, Rate Limiting",
+    "duration": "1h 33m 15s",
+    "seconds": 5595,
+    "track": "devops"
+  },
+  {
+    "id": "lec-144",
+    "n": 144,
+    "title": "Week 46.1 | Rust vs Go vs JS Benchmarks",
+    "duration": "39m 26s",
+    "seconds": 2366,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-145",
+    "n": 145,
+    "title": "Week 47.1 | Rate Limiting, DDoS, Captcha",
+    "duration": "1h 40m 1s",
+    "seconds": 6001,
+    "track": "devops"
+  },
+  {
+    "id": "lec-146",
+    "n": 146,
+    "title": "Week 48.1 | Deploy with Coolify",
+    "duration": "22m 53s",
+    "seconds": 1373,
+    "track": "devops"
+  },
+  {
+    "id": "lec-147",
+    "n": 147,
+    "title": "Week 49.1 | Building CodeForces",
+    "duration": "2h 19m 45s",
+    "seconds": 8385,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-148",
+    "n": 148,
+    "title": "[WEB3] Week 44.1 | Telegram Bonk Bot",
+    "duration": "1h 5m 43s",
+    "seconds": 3943,
+    "track": "web3"
+  },
+  {
+    "id": "lec-149",
+    "n": 149,
+    "title": "Week 50.1 | Continuing CodeForces Project",
+    "duration": "1h 26m 12s",
+    "seconds": 5172,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-150",
+    "n": 150,
+    "title": "[WEB3] Week 45.1 | Wrapping up web3 cohort",
+    "duration": "1h 17m 18s",
+    "seconds": 4638,
+    "track": "web3"
+  },
+  {
+    "id": "lec-151",
+    "n": 151,
+    "title": "Week 51.1 | Sharding, Replication, System Design",
+    "duration": "1h 45m 37s",
+    "seconds": 6337,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-152",
+    "n": 152,
+    "title": "Building Replit (offline)",
+    "duration": "3h 22m 41s",
+    "seconds": 12161,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-153",
+    "n": 153,
+    "title": "Building Crypto Centralized Exchange Part 1",
+    "duration": "2h 23m 7s",
+    "seconds": 8587,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-154",
+    "n": 154,
+    "title": "Building Crypto Centralized Exchange Part 2",
+    "duration": "1h 38m 30s",
+    "seconds": 5910,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-155",
+    "n": 155,
+    "title": "Building Crypto Payment Gateway Part 1",
+    "duration": "1h 45m 22s",
+    "seconds": 6322,
+    "track": "webdev"
+  },
+  {
+    "id": "lec-156",
+    "n": 156,
+    "title": "Building Crypto Payment Gateway Part 2",
+    "duration": "52m 59s",
+    "seconds": 3179,
+    "track": "webdev"
+  }
 ];
 
-const PHASES = [
-  {id:'p1',title:'Phase 1 — Foundations',subtitle:'JS, Node.js, Express, DOM',months:'Month 1–3',color:'var(--color-blue)',light:'var(--color-blue-highlight)',sections:['webdev'],groupRange:[0,3],target:45},
-  {id:'p2',title:'Phase 2 — React & TypeScript',subtitle:'React hooks, TS, State Mgmt',months:'Month 4–5',color:'var(--color-purple)',light:'var(--color-purple-highlight)',sections:['webdev'],groupRange:[3,6],target:40},
-  {id:'p3',title:'Phase 3 — DevOps',subtitle:'Docker, CI/CD, AWS, K8s',months:'Month 6–8',color:'var(--color-success)',light:'var(--color-success-highlight)',sections:['devops'],groupRange:[0,99],target:39},
-  {id:'p4',title:'Phase 4 — Web3/Blockchain',subtitle:'Solana, Ethereum, Smart Contracts',months:'Month 9–11',color:'var(--color-purple)',light:'var(--color-purple-highlight)',sections:['web3'],groupRange:[0,99],target:54},
-  {id:'p5',title:'Phase 5 — Consolidation',subtitle:'DSA, Extra content, Capstone',months:'Month 12',color:'var(--color-orange)',light:'var(--color-orange-highlight)',sections:['extra'],groupRange:[0,99],target:30},
-];
+const TRACKS = {
+  webdev: { label: 'Web Dev', color: 'var(--webdev)' },
+  devops: { label: 'DevOps', color: 'var(--devops)' },
+  web3: { label: 'Web3', color: 'var(--web3)' },
+  other: { label: 'Other', color: 'var(--other)' }
+};
+const STORAGE_KEY = 'cohort-3-tracker-progress-v1';
+const THEME_KEY = 'cohort-3-tracker-theme-v1';
+let progress = loadProgress();
 
-// ============================================================
-// STATE
-// ============================================================
-let state = {};
-let currentFilter = 'all';
-let currentSearch = '';
-let currentSection = null;
+const listEl = document.getElementById('lectureList');
+const searchEl = document.getElementById('search');
+const statusFilterEl = document.getElementById('statusFilter');
+const trackFilterEl = document.getElementById('trackFilter');
+const emptyStateEl = document.getElementById('emptyState');
 
-function loadState(){
-  try{const s=localStorage.getItem('100x-tracker');if(s)state=JSON.parse(s);}catch(e){}
-}
-function saveState(){
-  try{localStorage.setItem('100x-tracker',JSON.stringify(state));}catch(e){}
-  // Also store in memory
-  window._savedState = JSON.stringify(state);
-}
-function getLectureId(sectionId,groupIdx,lectureIdx){return `${sectionId}_${groupIdx}_${lectureIdx}`}
-function isDone(id){return !!state[id]}
-function toggleDone(id){
-  if(state[id]){delete state[id]}else{state[id]={ts:Date.now()}}
-  saveState();updateAll();
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (error) {
+    return {};
+  }
 }
 
-// ============================================================
-// COUNTS
-// ============================================================
-function getAllLectures(){
-  const all=[];
-  SECTIONS.forEach(s=>{s.groups.forEach((g,gi)=>{g.lectures.forEach((l,li)=>{all.push({...l,id:getLectureId(s.id,gi,li),sectionId:s.id,groupName:g.name,sectionName:s.name,color:s.color,light:s.light})});});});
-  return all;
-}
-function countSection(sectionId){
-  const all=getAllLectures().filter(l=>l.sectionId===sectionId);
-  return{total:all.length,done:all.filter(l=>isDone(l.id)).length};
-}
-function getTotalStats(){
-  const all=getAllLectures();
-  return{total:all.length,done:all.filter(l=>isDone(l.id)).length};
+function saveProgress() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
 
-// ============================================================
-// RENDER
-// ============================================================
-function updateAll(){
-  updateSidebar();
-  updateDashboard();
-  if(document.getElementById('view-lectures').classList.contains('active')){renderLectures();}
-  renderPhaseGrids();
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
 }
 
-function updateSidebar(){
-  const{total,done}=getTotalStats();
-  const pct=total?Math.round(done/total*100):0;
-  document.getElementById('overall-pct').textContent=pct+'%';
-  document.getElementById('overall-fill').style.width=pct+'%';
-  document.getElementById('done-count').textContent=done;
-  document.getElementById('remain-count').textContent=total-done;
-  document.getElementById('total-count').textContent=total;
-  ['webdev','devops','web3','extra'].forEach(sid=>{
-    const{total:t,done:d}=countSection(sid);
-    const el=document.getElementById('nav-pct-'+sid);
-    if(el)el.textContent=t?Math.round(d/t*100)+'%':'0%';
+function formatSeconds(totalSeconds) {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.round((totalSeconds % 3600) / 60);
+  if (hours && minutes) return hours + 'h ' + minutes + 'm';
+  if (hours) return hours + 'h';
+  return minutes + 'm';
+}
+
+function isDone(id) {
+  return Boolean(progress[id]);
+}
+
+function toggleLecture(id) {
+  if (progress[id]) {
+    delete progress[id];
+  } else {
+    progress[id] = { completedAt: new Date().toISOString() };
+  }
+  saveProgress();
+  render();
+}
+
+function getFilteredLectures() {
+  const query = searchEl.value.trim().toLowerCase();
+  const status = statusFilterEl.value;
+  const track = trackFilterEl.value;
+  return LECTURES.filter(lecture => {
+    if (status === 'done' && !isDone(lecture.id)) return false;
+    if (status === 'todo' && isDone(lecture.id)) return false;
+    if (track !== 'all' && lecture.track !== track) return false;
+    if (query && !(lecture.title.toLowerCase().includes(query) || String(lecture.n).includes(query))) return false;
+    return true;
   });
 }
 
-function updateDashboard(){
-  const{total,done}=getTotalStats();
-  const pct=total?Math.round(done/total*100):0;
-  document.getElementById('kpi-done').textContent=done;
-  document.getElementById('kpi-done-sub').textContent=`of ${total} total — ${pct}% complete`;
-  // Estimate hours: avg 1.65h per lecture
-  const hoursWatched=Math.round(done*1.65);
-  document.getElementById('kpi-hours').textContent=hoursWatched+'h';
-  // Days remaining
-  const deadline=new Date('2027-03-30');
-  const now=new Date();
-  const daysLeft=Math.ceil((deadline-now)/(1000*60*60*24));
-  document.getElementById('kpi-days').textContent=Math.max(0,daysLeft);
-  // Pace
-  const weeksLeft=Math.max(1,Math.ceil(daysLeft/7));
-  const remaining=total-done;
-  const pace=(remaining/weeksLeft).toFixed(1);
-  document.getElementById('kpi-pace').textContent=pace;
-  document.getElementById('kpi-pace-sub').textContent='lectures/week to finish on time';
-  // Streak grid
-  renderStreakGrid();
-}
-
-function renderStreakGrid(){
-  const grid=document.getElementById('streak-grid');
-  if(!grid)return;
-  const cells=[];
-  const now=Date.now();
-  const day=86400000;
-  // Build 52 weeks (364 days) of cells
-  for(let i=363;i>=0;i--){
-    const dayStart=now-i*day;
-    const dayEnd=dayStart+day;
-    const doneToday=Object.values(state).filter(v=>v.ts&&v.ts>=dayStart&&v.ts<dayEnd).length;
-    const level=doneToday===0?'':doneToday<=1?'done-1':doneToday<=3?'done-2':'done-3';
-    cells.push(`<div class="streak-cell ${level}" title="${new Date(dayStart).toLocaleDateString()}${doneToday?' — '+doneToday+' done':''}"></div>`);
-  }
-  grid.innerHTML=cells.join('');
-}
-
-function renderPhaseGrids(){
-  const allLectures=getAllLectures();
-  const phaseHtml=PHASES.map(p=>{
-    const pLectures=allLectures.filter(l=>p.sections.includes(l.sectionId));
-    const pDone=pLectures.filter(l=>isDone(l.id)).length;
-    const pTotal=pLectures.length;
-    const pct=pTotal?Math.round(pDone/pTotal*100):0;
-    return `<div class="phase-card">
-      <div class="phase-header">
-        <span class="phase-badge" style="background:${p.light};color:${p.color}">${p.months}</span>
-        <span class="phase-status">${pDone}/${pTotal}</span>
-      </div>
-      <div class="phase-title">${p.title}</div>
-      <div class="phase-subtitle">${p.subtitle}</div>
-      <div class="phase-progress">
-        <div class="progress-label"><span style="font-size:var(--text-xs);color:var(--color-text-muted)">Progress</span><span class="progress-pct" style="color:${p.color}">${pct}%</span></div>
-        <div class="phase-prog-bar"><div class="phase-prog-fill" style="width:${pct}%;background:${p.color}"></div></div>
-      </div>
-    </div>`;
+function renderList() {
+  const filtered = getFilteredLectures();
+  emptyStateEl.style.display = filtered.length ? 'none' : 'block';
+  listEl.innerHTML = filtered.map(lecture => {
+    const done = isDone(lecture.id);
+    const track = TRACKS[lecture.track];
+    return '<article class="lecture ' + (done ? 'done' : '') + '" id="' + lecture.id + '">' +
+      '<button class="check" type="button" aria-label="Toggle lecture ' + lecture.n + '" onclick="toggleLecture(\'' + lecture.id + '\')">' +
+        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>' +
+      '</button>' +
+      '<div class="num">#' + String(lecture.n).padStart(3, '0') + '</div>' +
+      '<div class="title">' + escapeHtml(lecture.title) + '</div>' +
+      '<div class="duration">' + escapeHtml(lecture.duration) + '</div>' +
+      '<div class="badge ' + lecture.track + '">' + track.label + '</div>' +
+    '</article>';
   }).join('');
-  ['phase-grid-dash','phase-grid-roadmap'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.innerHTML=phaseHtml;
-  });
+  document.getElementById('visibleCount').textContent = filtered.length;
 }
 
-// ============================================================
-// LECTURE RENDERING
-// ============================================================
-function renderLectures(){
-  const container=document.getElementById('lectures-content');
-  const search=currentSearch.toLowerCase();
-  let sectionsToShow=SECTIONS;
-  if(currentSection)sectionsToShow=SECTIONS.filter(s=>s.id===currentSection);
+function renderStats() {
+  const total = LECTURES.length;
+  const doneLectures = LECTURES.filter(lecture => isDone(lecture.id));
+  const done = doneLectures.length;
+  const totalSeconds = LECTURES.reduce((sum, lecture) => sum + lecture.seconds, 0);
+  const watchedSeconds = doneLectures.reduce((sum, lecture) => sum + lecture.seconds, 0);
+  const pct = total ? Math.round((done / total) * 100) : 0;
 
-  let html='';
-  let totalShown=0;
+  document.getElementById('overallPct').textContent = pct + '%';
+  document.getElementById('overallBar').style.width = pct + '%';
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('leftCount').textContent = total - done;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('watchedTime').textContent = formatSeconds(watchedSeconds);
+  document.getElementById('totalTime').textContent = formatSeconds(totalSeconds);
+  document.getElementById('remainingTime').textContent = formatSeconds(totalSeconds - watchedSeconds);
+  document.getElementById('subline').textContent = done + ' of ' + total + ' lectures complete';
 
-  sectionsToShow.forEach(sec=>{
-    sec.groups.forEach((grp,gi)=>{
-      let filteredLectures=grp.lectures.map((l,li)=>({...l,id:getLectureId(sec.id,gi,li),sectionId:sec.id,color:sec.color,light:sec.light}));
-      // Filter by status
-      if(currentFilter==='done')filteredLectures=filteredLectures.filter(l=>isDone(l.id));
-      if(currentFilter==='todo')filteredLectures=filteredLectures.filter(l=>!isDone(l.id));
-      // Filter by section chip
-      if(['webdev','devops','web3','extra'].includes(currentFilter))filteredLectures=filteredLectures.filter(l=>l.sectionId===currentFilter);
-      // Search
-      if(search)filteredLectures=filteredLectures.filter(l=>l.t.toLowerCase().includes(search));
-      if(!filteredLectures.length)return;
-      totalShown+=filteredLectures.length;
-      const doneInGroup=filteredLectures.filter(l=>isDone(l.id)).length;
-      const pct=filteredLectures.length?Math.round(doneInGroup/filteredLectures.length*100):0;
-      const grpId=`grp-${sec.id}-${gi}`;
-      html+=`<div class="lecture-group">
-        <div class="lecture-group-header" onclick="toggleGroup('${grpId}')">
-          <span class="group-dot" style="background:${sec.color}"></span>
-          <span class="group-name">${grp.name} <span style="font-size:var(--text-xs);color:var(--color-text-faint);font-weight:400">— ${sec.name}</span></span>
-          <span class="group-progress-mini">${doneInGroup}/${filteredLectures.length}</span>
-          <span class="group-chevron" id="chev-${grpId}">▶</span>
-        </div>
-        <div class="group-prog-bar"><div class="group-prog-fill" style="width:${pct}%;background:${sec.color}"></div></div>
-        <div class="lecture-list" id="${grpId}">
-          ${filteredLectures.map(l=>`
-            <div class="lecture-item ${isDone(l.id)?'done':''}" onclick="toggleDone('${l.id}')" id="li-${l.id}">
-              <div class="lecture-check">
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-              </div>
-              <span class="lecture-title">${l.t}</span>
-              <span class="lecture-duration">${l.d}</span>
-              <span class="lecture-tag" style="background:${l.light};color:${l.color}">${l.sectionId==='webdev'?'Web Dev':l.sectionId==='devops'?'DevOps':l.sectionId==='web3'?'Web3':'Extra'}</span>
-            </div>
-          `).join('')}
-        </div>
-      </div>`;
-    });
-  });
+  const next = LECTURES.find(lecture => !isDone(lecture.id));
+  document.getElementById('nextLecture').textContent = next ? '#' + next.n + ' - ' + next.title + ' (' + next.duration + ')' : 'All lectures are marked complete.';
+  document.getElementById('nextTitle').textContent = next ? 'Next lecture' : 'Course complete';
 
-  if(!html){
-    html=`<div class="empty-state"><div class="empty-icon">🔍</div><h3>No lectures found</h3><p>Try a different search or filter.</p></div>`;
+  document.getElementById('trackStats').innerHTML = Object.keys(TRACKS).map(key => {
+    const trackLectures = LECTURES.filter(lecture => lecture.track === key);
+    const trackDone = trackLectures.filter(lecture => isDone(lecture.id)).length;
+    const trackPct = trackLectures.length ? Math.round(trackDone / trackLectures.length * 100) : 0;
+    return '<div class="track-row">' +
+      '<div class="dot" style="background:' + TRACKS[key].color + '"></div>' +
+      '<strong>' + TRACKS[key].label + '</strong>' +
+      '<span>' + trackDone + '/' + trackLectures.length + ' - ' + trackPct + '%</span>' +
+    '</div>';
+  }).join('');
+}
+
+function render() {
+  renderStats();
+  renderList();
+}
+
+function scrollToNextUndone() {
+  const next = LECTURES.find(lecture => !isDone(lecture.id));
+  if (!next) return;
+  statusFilterEl.value = 'all';
+  trackFilterEl.value = 'all';
+  searchEl.value = '';
+  render();
+  const node = document.getElementById(next.id);
+  if (node) node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function exportProgress() {
+  const payload = JSON.stringify({ exportedAt: new Date().toISOString(), progress }, null, 2);
+  const blob = new Blob([payload], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'cohort-3-progress.json';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function resetProgress() {
+  if (!confirm('Reset all completed lectures?')) return;
+  progress = {};
+  saveProgress();
+  render();
+}
+
+function applySavedTheme() {
+  const savedTheme = localStorage.getItem(THEME_KEY);
+  if (savedTheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+}
+
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem(THEME_KEY, 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem(THEME_KEY, 'light');
   }
-  container.innerHTML=html;
-  document.getElementById('lectures-count').textContent=totalShown+' lectures';
-  // Auto-open first group
-  const firstGrp=container.querySelector('.lecture-list');
-  if(firstGrp){firstGrp.classList.add('open');const chev=container.querySelector('.group-chevron');if(chev)chev.classList.add('open');}
 }
 
-function toggleGroup(id){
-  const list=document.getElementById(id);
-  const chev=document.getElementById('chev-'+id);
-  if(list){list.classList.toggle('open');if(chev)chev.classList.toggle('open');}
-}
+searchEl.addEventListener('input', renderList);
+statusFilterEl.addEventListener('change', renderList);
+trackFilterEl.addEventListener('change', renderList);
+document.getElementById('nextBtn').addEventListener('click', scrollToNextUndone);
+document.getElementById('exportBtn').addEventListener('click', exportProgress);
+document.getElementById('resetBtn').addEventListener('click', resetProgress);
+document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 
-// ============================================================
-// FILTERS & VIEWS
-// ============================================================
-function switchView(viewId, navEl){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.getElementById('view-'+viewId).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  if(navEl)navEl.classList.add('active');
-  if(viewId==='lectures'){currentSection=null;renderLectures();}
-}
-
-function switchViewFilter(viewId, sectionId, navEl){
-  switchView(viewId, navEl);
-  currentSection=sectionId;
-  currentFilter='all';
-  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
-  document.querySelector('.filter-chip').classList.add('active');
-  renderLectures();
-  const titleMap={webdev:'Web Dev Lectures',devops:'DevOps Lectures',web3:'Web3 Lectures',extra:'Extra (Optional)'};
-  document.getElementById('lectures-title').textContent=(titleMap[sectionId]||'Lectures')+' 📚';
-}
-
-function setFilter(filter, el){
-  currentFilter=filter;
-  currentSection=['webdev','devops','web3','extra'].includes(filter)?filter:null;
-  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('lectures-title').textContent='All Lectures 📚';
-  renderLectures();
-}
-
-function filterLectures(val){
-  currentSearch=val;
-  renderLectures();
-}
-
-function resetAll(){
-  if(confirm('Reset all progress? This cannot be undone.')){state={};saveState();updateAll();}
-}
-
-function toggleTheme(){
-  const html=document.documentElement;
-  const current=html.getAttribute('data-theme');
-  html.setAttribute('data-theme',current==='dark'?'light':'dark');
-}
-
-// ============================================================
-// INIT
-// ============================================================
-loadState();
-updateAll();
-renderLectures();
-renderPhaseGrids();
+applySavedTheme();
+render();
 </script>
 </body>
 </html>
