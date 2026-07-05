@@ -1,1 +1,760 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100xDevs Cohort Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root,[data-theme="light"]{
+  --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;
+  --color-surface-offset:#f0ede8;--color-surface-dynamic:#e8e5e0;
+  --color-divider:#dcd9d5;--color-border:#d4d1ca;
+  --color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;
+  --color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-highlight:#cedcd8;
+  --color-success:#437a22;--color-success-highlight:#d4dfcc;
+  --color-warning:#964219;--color-warning-highlight:#ddcfc6;
+  --color-blue:#006494;--color-blue-highlight:#c6d8e4;
+  --color-purple:#7a39bb;--color-purple-highlight:#dacfde;
+  --color-orange:#da7101;--color-orange-highlight:#e7d7c4;
+  --shadow-sm:0 1px 2px oklch(0.2 0.01 80/0.06);
+  --shadow-md:0 4px 12px oklch(0.2 0.01 80/0.08);
+  --shadow-lg:0 12px 32px oklch(0.2 0.01 80/0.12);
+  --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;--radius-full:9999px;
+  --text-xs:clamp(0.75rem,0.7rem+0.25vw,0.875rem);
+  --text-sm:clamp(0.875rem,0.8rem+0.35vw,1rem);
+  --text-base:clamp(1rem,0.95rem+0.25vw,1.125rem);
+  --text-lg:clamp(1.125rem,1rem+0.75vw,1.5rem);
+  --text-xl:clamp(1.5rem,1.2rem+1.25vw,2.25rem);
+  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;
+  --font-body:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;
+  --transition:180ms cubic-bezier(0.16,1,0.3,1);
+}
+[data-theme="dark"]{
+  --color-bg:#0f0e0d;--color-surface:#141312;--color-surface-2:#191817;
+  --color-surface-offset:#1d1c1a;--color-surface-dynamic:#252422;
+  --color-divider:#2a2927;--color-border:#333230;
+  --color-text:#d4d2cf;--color-text-muted:#7a7876;--color-text-faint:#4a4947;
+  --color-primary:#4f98a3;--color-primary-hover:#3a828c;--color-primary-highlight:#1e3335;
+  --color-success:#6daa45;--color-success-highlight:#1e3018;
+  --color-warning:#bb653b;--color-warning-highlight:#3a2518;
+  --color-blue:#5591c7;--color-blue-highlight:#1a2e40;
+  --color-purple:#a86fdf;--color-purple-highlight:#2e1e45;
+  --color-orange:#fdab43;--color-orange-highlight:#3a2810;
+  --shadow-sm:0 1px 2px oklch(0 0 0/0.25);
+  --shadow-md:0 4px 12px oklch(0 0 0/0.35);
+  --shadow-lg:0 12px 32px oklch(0 0 0/0.45);
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-sm);color:var(--color-text);background:var(--color-bg);line-height:1.6}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%;height:auto}
 
+/* LAYOUT */
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100dvh}
+@media(max-width:768px){.app{grid-template-columns:1fr}}
+.sidebar{background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;position:sticky;top:0;height:100dvh;overflow-y:auto}
+.main{overflow:hidden;min-width:0}
+
+/* SIDEBAR */
+.sidebar-header{padding:var(--space-6) var(--space-5) var(--space-4);border-bottom:1px solid var(--color-divider)}
+.logo{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-4)}
+.logo-mark{width:34px;height:34px;flex-shrink:0}
+.logo-text{font-size:var(--text-base);font-weight:700;letter-spacing:-0.02em;line-height:1.2}
+.logo-text span{color:var(--color-primary)}
+
+/* OVERALL PROGRESS */
+.overall-progress{background:var(--color-surface-offset);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-3)}
+.progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-2)}
+.progress-label span:first-child{font-size:var(--text-xs);font-weight:600;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:0.06em}
+.progress-pct{font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600;color:var(--color-primary)}
+.progress-bar{height:6px;background:var(--color-surface-dynamic);border-radius:var(--radius-full);overflow:hidden;margin-bottom:var(--space-2)}
+.progress-fill{height:100%;background:var(--color-primary);border-radius:var(--radius-full);transition:width 0.5s cubic-bezier(0.16,1,0.3,1)}
+.progress-stats{display:flex;gap:var(--space-4)}
+.stat-mini{text-align:center;flex:1}
+.stat-mini-val{font-family:var(--font-mono);font-size:var(--text-sm);font-weight:700;color:var(--color-text)}
+.stat-mini-lbl{font-size:var(--text-xs);color:var(--color-text-faint)}
+
+/* NAV */
+.nav-section{padding:var(--space-3) var(--space-5) var(--space-2)}
+.nav-section-title{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-faint);margin-bottom:var(--space-1)}
+.nav-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);margin-bottom:2px;cursor:pointer;transition:background var(--transition),color var(--transition);font-size:var(--text-sm);color:var(--color-text-muted)}
+.nav-item:hover{background:var(--color-surface-dynamic);color:var(--color-text)}
+.nav-item.active{background:var(--color-primary-highlight);color:var(--color-primary);font-weight:600}
+.nav-item .nav-dot{width:8px;height:8px;border-radius:var(--radius-full);flex-shrink:0}
+.nav-item .nav-count{margin-left:auto;font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint)}
+.nav-item .nav-pct{margin-left:auto;font-family:var(--font-mono);font-size:var(--text-xs);font-weight:600}
+.sidebar-footer{margin-top:auto;padding:var(--space-4) var(--space-5);border-top:1px solid var(--color-divider);display:flex;align-items:center;justify-content:space-between}
+.theme-toggle{padding:var(--space-2);border-radius:var(--radius-md);color:var(--color-text-muted);transition:background var(--transition),color var(--transition)}
+.theme-toggle:hover{background:var(--color-surface-dynamic);color:var(--color-text)}
+.deadline-badge{font-size:var(--text-xs);color:var(--color-text-muted);display:flex;align-items:center;gap:var(--space-1)}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) var(--space-8);border-bottom:1px solid var(--color-border);background:var(--color-bg);position:sticky;top:0;z-index:10}
+.topbar-title{font-size:var(--text-lg);font-weight:700;letter-spacing:-0.02em}
+.topbar-actions{display:flex;align-items:center;gap:var(--space-3)}
+.btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:500;transition:background var(--transition),color var(--transition),box-shadow var(--transition);cursor:pointer}
+.btn-primary{background:var(--color-primary);color:#fff}
+.btn-primary:hover{background:var(--color-primary-hover);box-shadow:var(--shadow-sm)}
+.btn-ghost{background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border)}
+.btn-ghost:hover{background:var(--color-surface-offset);color:var(--color-text)}
+.filter-bar{display:flex;gap:var(--space-2);align-items:center;padding:var(--space-3) var(--space-8);border-bottom:1px solid var(--color-divider);flex-wrap:wrap}
+.filter-chip{padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:500;cursor:pointer;border:1px solid var(--color-border);color:var(--color-text-muted);transition:all var(--transition)}
+.filter-chip:hover{border-color:var(--color-primary);color:var(--color-primary)}
+.filter-chip.active{background:var(--color-primary-highlight);border-color:var(--color-primary);color:var(--color-primary)}
+.search-input{padding:var(--space-1) var(--space-3);border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);font-size:var(--text-xs);outline:none;transition:border-color var(--transition);min-width:180px}
+.search-input:focus{border-color:var(--color-primary)}
+.search-input::placeholder{color:var(--color-text-faint)}
+
+/* CONTENT AREA */
+.content{padding:var(--space-6) var(--space-8);max-width:100%}
+
+/* DASHBOARD VIEW */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);margin-bottom:var(--space-8)}
+@media(max-width:1024px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.kpi-grid{grid-template-columns:1fr}}
+.kpi-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm)}
+.kpi-label{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-2)}
+.kpi-value{font-family:var(--font-mono);font-size:var(--text-xl);font-weight:700;line-height:1;margin-bottom:var(--space-1)}
+.kpi-sub{font-size:var(--text-xs);color:var(--color-text-faint)}
+
+/* PHASE TIMELINE */
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-4);margin-bottom:var(--space-8)}
+.phase-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm);transition:box-shadow var(--transition)}
+.phase-card:hover{box-shadow:var(--shadow-md)}
+.phase-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-3)}
+.phase-badge{font-size:var(--text-xs);font-weight:700;padding:var(--space-1) var(--space-2);border-radius:var(--radius-full);letter-spacing:0.04em}
+.phase-status{font-size:var(--text-xs);color:var(--color-text-faint)}
+.phase-title{font-size:var(--text-base);font-weight:700;margin-bottom:var(--space-1)}
+.phase-subtitle{font-size:var(--text-xs);color:var(--color-text-muted);margin-bottom:var(--space-4)}
+.phase-progress{margin-bottom:var(--space-3)}
+.phase-prog-bar{height:4px;background:var(--color-surface-dynamic);border-radius:var(--radius-full);overflow:hidden;margin-top:var(--space-1)}
+.phase-prog-fill{height:100%;border-radius:var(--radius-full);transition:width 0.5s cubic-bezier(0.16,1,0.3,1)}
+.phase-meta{display:flex;gap:var(--space-3);flex-wrap:wrap}
+.phase-tag{font-size:var(--text-xs);color:var(--color-text-muted);display:flex;align-items:center;gap:var(--space-1)}
+
+/* SECTION HEADING */
+.section-heading{font-size:var(--text-lg);font-weight:700;letter-spacing:-0.01em;margin-bottom:var(--space-4);display:flex;align-items:center;gap:var(--space-3)}
+.section-heading .badge{font-size:var(--text-xs);font-weight:600;padding:var(--space-1) var(--space-2);border-radius:var(--radius-full)}
+
+/* LECTURE LIST */
+.lecture-group{margin-bottom:var(--space-8)}
+.lecture-group-header{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg) var(--radius-lg) 0 0;cursor:pointer;transition:background var(--transition)}
+.lecture-group-header:hover{background:var(--color-surface-offset)}
+.group-dot{width:10px;height:10px;border-radius:var(--radius-full);flex-shrink:0}
+.group-name{font-size:var(--text-sm);font-weight:600;flex:1}
+.group-progress-mini{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-muted)}
+.group-chevron{color:var(--color-text-faint);transition:transform var(--transition)}
+.group-chevron.open{transform:rotate(90deg)}
+.group-prog-bar{height:3px;background:var(--color-surface-dynamic)}
+.group-prog-fill{height:100%;transition:width 0.4s cubic-bezier(0.16,1,0.3,1)}
+
+/* LECTURE ITEMS */
+.lecture-list{border:1px solid var(--color-border);border-top:none;border-radius:0 0 var(--radius-lg) var(--radius-lg);overflow:hidden;display:none}
+.lecture-list.open{display:block}
+.lecture-item{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-divider);transition:background var(--transition);cursor:pointer}
+.lecture-item:last-child{border-bottom:none}
+.lecture-item:hover{background:var(--color-surface-offset)}
+.lecture-item.done{background:color-mix(in oklab,var(--color-success) 4%,var(--color-surface))}
+.lecture-item.done .lecture-title{color:var(--color-text-muted);text-decoration:line-through;text-decoration-color:var(--color-text-faint)}
+.lecture-check{width:18px;height:18px;border-radius:var(--radius-sm);border:2px solid var(--color-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--transition);background:var(--color-bg)}
+.lecture-item.done .lecture-check{background:var(--color-success);border-color:var(--color-success)}
+.lecture-check svg{display:none}
+.lecture-item.done .lecture-check svg{display:block}
+.lecture-title{font-size:var(--text-sm);line-height:1.4}
+.lecture-duration{font-family:var(--font-mono);font-size:var(--text-xs);color:var(--color-text-faint);white-space:nowrap}
+.lecture-tag{font-size:var(--text-xs);padding:2px var(--space-2);border-radius:var(--radius-full);font-weight:500;white-space:nowrap}
+
+/* WEEKLY SCHEDULE */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--space-3);margin-bottom:var(--space-8)}
+@media(max-width:900px){.week-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:500px){.week-grid{grid-template-columns:repeat(2,1fr)}}
+.day-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);text-align:center}
+.day-name{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-2)}
+.day-icon{font-size:1.5rem;margin-bottom:var(--space-2)}
+.day-task{font-size:var(--text-xs);color:var(--color-text-muted);line-height:1.5}
+.day-card.primary{border-color:var(--color-primary);background:var(--color-primary-highlight)}
+.day-card.primary .day-name{color:var(--color-primary)}
+
+/* VIEWS */
+.view{display:none}
+.view.active{display:block}
+
+/* EMPTY STATE */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:var(--space-16) var(--space-8);color:var(--color-text-muted)}
+.empty-icon{font-size:3rem;margin-bottom:var(--space-4);opacity:0.4}
+.empty-state h3{font-size:var(--text-base);font-weight:600;color:var(--color-text);margin-bottom:var(--space-2)}
+.empty-state p{font-size:var(--text-sm);max-width:36ch}
+
+/* MOBILE TOPBAR */
+.mobile-nav{display:none}
+@media(max-width:768px){
+  .sidebar{display:none}.mobile-nav{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--color-border);background:var(--color-surface);position:sticky;top:0;z-index:20}
+  .topbar{padding:var(--space-3) var(--space-4)}.content{padding:var(--space-4)}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}.week-grid{grid-template-columns:repeat(2,1fr)}
+  .filter-bar{padding:var(--space-3) var(--space-4)}
+}
+/* TOOLTIP */
+.tooltip-wrap{position:relative}
+.tooltip-wrap:hover .tooltip{opacity:1;transform:translateY(0)}
+.tooltip{position:absolute;bottom:calc(100%+6px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--color-text);color:var(--color-bg);font-size:var(--text-xs);padding:var(--space-1) var(--space-2);border-radius:var(--radius-sm);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity var(--transition),transform var(--transition);z-index:100}
+/* STREAK */
+.streak-row{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:var(--space-6)}
+.streak-cell{width:14px;height:14px;border-radius:2px;background:var(--color-surface-dynamic);cursor:default;transition:background var(--transition)}
+.streak-cell.done-1{background:color-mix(in oklab,var(--color-primary) 40%,var(--color-surface-dynamic))}
+.streak-cell.done-2{background:color-mix(in oklab,var(--color-primary) 65%,var(--color-surface-dynamic))}
+.streak-cell.done-3{background:var(--color-primary)}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 34 34" fill="none">
+        <rect width="34" height="34" rx="8" fill="var(--color-primary)"/>
+        <text x="17" y="23" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="16" fill="white">1x</text>
+      </svg>
+      <div class="logo-text">100x<span>Devs</span><br><small style="font-weight:400;font-size:0.7em;color:var(--color-text-muted)">Cohort Tracker</small></div>
+    </div>
+    <div class="overall-progress" id="overall-progress-block">
+      <div class="progress-label">
+        <span>Overall Progress</span>
+        <span class="progress-pct" id="overall-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="overall-fill" style="width:0%"></div></div>
+      <div class="progress-stats">
+        <div class="stat-mini"><div class="stat-mini-val" id="done-count">0</div><div class="stat-mini-lbl">Done</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" id="remain-count">0</div><div class="stat-mini-lbl">Left</div></div>
+        <div class="stat-mini"><div class="stat-mini-val" id="total-count">0</div><div class="stat-mini-lbl">Total</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Views</div>
+    <div class="nav-item active" data-view="dashboard" onclick="switchView('dashboard',this)">
+      <span class="nav-dot" style="background:var(--color-primary)"></span> Dashboard
+    </div>
+    <div class="nav-item" data-view="lectures" onclick="switchView('lectures',this)">
+      <span class="nav-dot" style="background:var(--color-blue)"></span> All Lectures
+    </div>
+    <div class="nav-item" data-view="roadmap" onclick="switchView('roadmap',this)">
+      <span class="nav-dot" style="background:var(--color-purple)"></span> Phase Roadmap
+    </div>
+    <div class="nav-item" data-view="schedule" onclick="switchView('schedule',this)">
+      <span class="nav-dot" style="background:var(--color-orange)"></span> Weekly Schedule
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Sections</div>
+    <div class="nav-item" data-view="lectures" data-filter="webdev" onclick="switchViewFilter('lectures','webdev',this)">
+      <span class="nav-dot" style="background:var(--color-blue)"></span> Web Dev
+      <span class="nav-pct" id="nav-pct-webdev" style="color:var(--color-blue)">0%</span>
+    </div>
+    <div class="nav-item" data-view="lectures" data-filter="devops" onclick="switchViewFilter('lectures','devops',this)">
+      <span class="nav-dot" style="background:var(--color-success)"></span> DevOps
+      <span class="nav-pct" id="nav-pct-devops" style="color:var(--color-success)">0%</span>
+    </div>
+    <div class="nav-item" data-view="lectures" data-filter="web3" onclick="switchViewFilter('lectures','web3',this)">
+      <span class="nav-dot" style="background:var(--color-purple)"></span> Web3 / Blockchain
+      <span class="nav-pct" id="nav-pct-web3" style="color:var(--color-purple)">0%</span>
+    </div>
+    <div class="nav-item" data-view="lectures" data-filter="extra" onclick="switchViewFilter('lectures','extra',this)">
+      <span class="nav-dot" style="background:var(--color-orange)"></span> Extra (Optional)
+      <span class="nav-pct" id="nav-pct-extra" style="color:var(--color-orange)">0%</span>
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="deadline-badge">🎯 Goal: Mar 2027</div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" data-theme-toggle>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <!-- DASHBOARD VIEW -->
+  <div class="view active" id="view-dashboard">
+    <div class="topbar">
+      <div class="topbar-title">Dashboard 📊</div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" onclick="resetAll()">Reset All</button>
+        <button class="btn btn-primary" onclick="switchView('lectures',document.querySelector('[data-view=lectures]'))">+ Mark Lectures</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Lectures Done</div>
+          <div class="kpi-value" id="kpi-done" style="color:var(--color-primary)">0</div>
+          <div class="kpi-sub" id="kpi-done-sub">of 253 total</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Hours Watched</div>
+          <div class="kpi-value" id="kpi-hours" style="color:var(--color-blue)">0h</div>
+          <div class="kpi-sub">~420h total content</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Days Remaining</div>
+          <div class="kpi-value" id="kpi-days" style="color:var(--color-orange)">366</div>
+          <div class="kpi-sub">Deadline: Mar 30, 2027</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Pace Required</div>
+          <div class="kpi-value" id="kpi-pace" style="color:var(--color-warning)">—</div>
+          <div class="kpi-sub" id="kpi-pace-sub">lectures/week</div>
+        </div>
+      </div>
+      <div class="section-heading">Phase Roadmap <span class="badge" style="background:var(--color-primary-highlight);color:var(--color-primary)">12 Months</span></div>
+      <div class="phase-grid" id="phase-grid-dash"></div>
+      <div class="section-heading">Your Activity <span class="badge" style="background:var(--color-surface-offset);color:var(--color-text-muted)">Last 52 weeks</span></div>
+      <div class="streak-row" id="streak-grid"></div>
+    </div>
+  </div>
+
+  <!-- LECTURES VIEW -->
+  <div class="view" id="view-lectures">
+    <div class="topbar">
+      <div class="topbar-title" id="lectures-title">All Lectures 📚</div>
+      <div class="topbar-actions">
+        <span style="font-size:var(--text-xs);color:var(--color-text-muted)" id="lectures-count"></span>
+      </div>
+    </div>
+    <div class="filter-bar">
+      <input class="search-input" type="search" placeholder="Search lectures..." oninput="filterLectures(this.value)" id="search-input">
+      <div class="filter-chip active" onclick="setFilter('all',this)">All</div>
+      <div class="filter-chip" onclick="setFilter('todo',this)">To Do</div>
+      <div class="filter-chip" onclick="setFilter('done',this)">Done ✓</div>
+      <div class="filter-chip" id="fc-webdev" onclick="setFilter('webdev',this)">Web Dev</div>
+      <div class="filter-chip" id="fc-devops" onclick="setFilter('devops',this)">DevOps</div>
+      <div class="filter-chip" id="fc-web3" onclick="setFilter('web3',this)">Web3</div>
+      <div class="filter-chip" id="fc-extra" onclick="setFilter('extra',this)">Extra</div>
+    </div>
+    <div class="content" id="lectures-content" style="padding-top:var(--space-4)"></div>
+  </div>
+
+  <!-- ROADMAP VIEW -->
+  <div class="view" id="view-roadmap">
+    <div class="topbar"><div class="topbar-title">Phase Roadmap 🗺️</div></div>
+    <div class="content">
+      <div class="phase-grid" id="phase-grid-roadmap"></div>
+      <div class="section-heading" style="margin-top:var(--space-4)">Priority Matrix</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-4)">
+        <div class="kpi-card"><div class="kpi-label" style="color:var(--color-success)">🟢 Must Do</div><div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">Web Dev Weeks 1–15<br>DevOps Cohort<br>React + TypeScript<br>Node.js + MongoDB</div></div>
+        <div class="kpi-card"><div class="kpi-label" style="color:var(--color-blue)">🔵 Should Do</div><div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">Web3 / Blockchain<br>Smart Contracts<br>Solana Client Apps<br>Token Launchpad</div></div>
+        <div class="kpi-card"><div class="kpi-label" style="color:var(--color-orange)">🟡 Optional</div><div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">DSA (55 lectures)<br>Superdev Fellowship<br>Ad-hoc extras<br>Offline bonus content</div></div>
+        <div class="kpi-card"><div class="kpi-label" style="color:var(--color-error)">🔴 Skip First</div><div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">Deprecated section<br>Duplicate uploads<br>Cohort 2 duplicates</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE VIEW -->
+  <div class="view" id="view-schedule">
+    <div class="topbar"><div class="topbar-title">Weekly Schedule 📅</div></div>
+    <div class="content">
+      <div class="section-heading">Your 7-Day Study Routine</div>
+      <div class="week-grid" style="margin-bottom:var(--space-8)">
+        <div class="day-card primary"><div class="day-name">Monday</div><div class="day-icon">📺</div><div class="day-task">Watch 1–2 lectures<br>Code along immediately</div></div>
+        <div class="day-card"><div class="day-name">Tuesday</div><div class="day-icon">⌨️</div><div class="day-task">Finish coding task<br>from lecture</div></div>
+        <div class="day-card primary"><div class="day-name">Wednesday</div><div class="day-icon">📺</div><div class="day-task">Watch 1–2 lectures<br>Code along immediately</div></div>
+        <div class="day-card"><div class="day-name">Thursday</div><div class="day-icon">🛠️</div><div class="day-task">Build / extend<br>mini project</div></div>
+        <div class="day-card primary"><div class="day-name">Friday</div><div class="day-icon">📺</div><div class="day-task">Watch 1–2 lectures<br>Push notes to Obsidian</div></div>
+        <div class="day-card" style="border-color:var(--color-success);background:var(--color-success-highlight)"><div class="day-name" style="color:var(--color-success)">Saturday</div><div class="day-icon">🚀</div><div class="day-task">Project Day<br>Build from scratch</div></div>
+        <div class="day-card"><div class="day-name">Sunday</div><div class="day-icon">🔄</div><div class="day-task">Weekly review<br>Push to GitHub</div></div>
+      </div>
+      <div class="section-heading">Key Habits</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--space-4)">
+        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">💻</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Code Every Lecture</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Never just watch passively. Open your editor and type every line.</div></div>
+        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">🔨</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Build, Don't Copy</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">After watching, close the video and rebuild from memory.</div></div>
+        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">📦</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Daily GitHub Commit</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Even one small commit. Your streak = proof of consistency.</div></div>
+        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">🎯</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Follow the Order</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Web Dev first → DevOps → Web3. Don't skip ahead.</div></div>
+        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">🤖</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Use AI as Tutor</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Ask Perplexity/GPT practice problems after each lecture.</div></div>
+        <div class="kpi-card"><div style="font-size:1.4rem;margin-bottom:var(--space-2)">📊</div><div style="font-size:var(--text-sm);font-weight:600;margin-bottom:var(--space-1)">Sunday Review</div><div style="font-size:var(--text-xs);color:var(--color-text-muted)">Check your tracker, note what you completed, plan next week.</div></div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const SECTIONS = [
+  {
+    id:'webdev', name:'Web Development Cohort', color:'var(--color-blue)', light:'var(--color-blue-highlight)',
+    groups:[
+      {name:'Orientation & Warmup',lectures:[
+        {t:'1.1 - Web Dev + Devops Orientation',d:'2h 3m'},{t:'Cohort 2 Warmup - JS Basics',d:'45m'},{t:'Cohort 2 Warmup - Async/Promises',d:'50m'},{t:'Cohort 2 Warmup - Node.js Intro',d:'40m'},
+      ]},
+      {name:'Week 1–2: JS Foundations',lectures:[
+        {t:'1.2 | Javascript Basics',d:'1h 55m'},{t:'2.1 (Web Dev) | Async JS',d:'2h 28m'},{t:'2.2 (Web Dev) | Promises',d:'2h 50m'},{t:'2.3 | Node.js installation, assignments',d:'45m'},{t:'2.4 | Week 1 Assignment | VSCode Landing page',d:'34m'},{t:'2.5 | Promises, async and await',d:'37m'},
+      ]},
+      {name:'Week 2 Offline',lectures:[
+        {t:'Week 2 Offline - Session 1',d:'1h 30m'},{t:'Week 2 Offline - Session 2',d:'1h 20m'},{t:'Week 2 Offline - Session 3',d:'1h 10m'},{t:'Week 2 Offline - Session 4',d:'1h 25m'},{t:'Week 2 Offline - Session 5',d:'1h 15m'},
+      ]},
+      {name:'Week 3–4: DOM & Node',lectures:[
+        {t:'3.1 | DOM Introduction',d:'2h 23m'},{t:'3.2 | DOM Advance',d:'2h 20m'},{t:'4.1 | Node Runtime',d:'2h 23m'},{t:'4.2 | Express',d:'2h 30m'},
+      ]},
+      {name:'Week 4 Offline',lectures:[
+        {t:'Week 4 Offline - Express Deep Dive',d:'1h 45m'},{t:'Week 4 Offline - Middleware & Routing',d:'1h 30m'},
+      ]},
+      {name:'Week 5–6: HTTP & Auth',lectures:[
+        {t:'5.1 | Headers, Query parameters',d:'2h 18m'},{t:'5.2 | Middlewares and cors',d:'2h 5m'},{t:'6.1 | Auth in Node.js, JWTs',d:'2h 45m'},{t:'6.2 | Auth Middleware, localStorage, connecting frontend',d:'2h 25m'},
+      ]},
+      {name:'Week 5 Offline',lectures:[
+        {t:'Week 5 Offline - REST API Design',d:'1h 20m'},{t:'Week 5 Offline - Error Handling',d:'1h 10m'},{t:'Week 5 Offline - Testing APIs',d:'55m'},
+      ]},
+      {name:'Week 6 Offline',lectures:[
+        {t:'Week 6 Offline - JWT Deep Dive',d:'1h 15m'},{t:'Week 6 Offline - Auth Patterns',d:'1h 5m'},
+      ]},
+      {name:'Week 7–8: MongoDB & Zod',lectures:[
+        {t:'7.1 | Databases and MongoDB',d:'2h 8m'},{t:'7.2 | Zod, Hashing passwords and error handling',d:'2h 8m'},{t:'7.2 | Zod, Hashing passwords (Reupload)',d:'2h 8m'},
+      ]},
+      {name:'Week 8 Offline',lectures:[
+        {t:'Week 8 Offline - MongoDB Advanced Queries',d:'1h 40m'},
+      ]},
+      {name:'Weeks 9–12: React & TypeScript',lectures:[
+        {t:'9.1 | React Basics',d:'2h 15m'},{t:'9.2 | React Components & Props',d:'2h 5m'},{t:'10.1 | React Hooks - useState & useEffect',d:'2h 30m'},{t:'10.2 | React Hooks - useMemo, useCallback, useRef',d:'2h 20m'},{t:'11.1 | TypeScript Basics',d:'2h 10m'},{t:'11.2 | TypeScript Advanced',d:'2h 25m'},{t:'12.1 | State Management - Context API',d:'2h'},
+      ]},
+      {name:'Weeks 13–15: Full Stack',lectures:[
+        {t:'13.1 | Tailwind CSS',d:'2h'},{t:'13.2 | Next.js Intro',d:'2h 15m'},{t:'14.1 | Prisma + PostgreSQL',d:'2h 30m'},{t:'14.2 | Full Stack App',d:'2h 45m'},{t:'15.1 | WebSockets',d:'2h'},{t:'15.2 | Turborepo & Monorepos',d:'2h 20m'},
+      ]},
+    ]
+  },
+  {
+    id:'devops', name:'DevOps Cohort', color:'var(--color-success)', light:'var(--color-success-highlight)',
+    groups:[
+      {name:'Getting Started',lectures:[
+        {t:'DevOps Orientation',d:'1h 30m'},{t:'Linux Basics & Shell Scripting',d:'2h'},
+      ]},
+      {name:'Docker & Containers',lectures:[
+        {t:'Docker Intro & Installation',d:'2h 10m'},{t:'Docker Images & Containers',d:'2h 30m'},{t:'Docker Compose',d:'2h 15m'},{t:'Docker Networking',d:'1h 45m'},{t:'Docker Volumes & Persistence',d:'1h 30m'},
+      ]},
+      {name:'CI/CD',lectures:[
+        {t:'GitHub Actions Basics',d:'2h'},{t:'CI/CD Pipeline Setup',d:'2h 20m'},{t:'Automated Testing in CI',d:'1h 50m'},{t:'Docker in CI/CD',d:'1h 40m'},
+      ]},
+      {name:'AWS Cloud',lectures:[
+        {t:'AWS Intro & IAM',d:'2h'},{t:'EC2 & VPC',d:'2h 30m'},{t:'S3 & CloudFront',d:'1h 50m'},{t:'RDS & Databases on AWS',d:'2h 10m'},{t:'Load Balancers & Auto Scaling',d:'2h'},{t:'AWS Lambda & Serverless',d:'1h 45m'},
+      ]},
+      {name:'Kubernetes',lectures:[
+        {t:'Kubernetes Intro & Architecture',d:'2h 15m'},{t:'Pods, Deployments & Services',d:'2h 30m'},{t:'Kubernetes Networking',d:'2h'},{t:'Helm Charts',d:'1h 45m'},{t:'Kubernetes on AWS (EKS)',d:'2h 20m'},
+      ]},
+      {name:'Monitoring & More',lectures:[
+        {t:'Prometheus & Grafana',d:'2h'},{t:'Logging with ELK Stack',d:'1h 50m'},{t:'Nginx & Reverse Proxy',d:'1h 40m'},{t:'SSL/TLS & HTTPS',d:'1h 30m'},{t:'Infrastructure as Code - Terraform',d:'2h 10m'},{t:'DevOps Capstone Project',d:'2h 30m'},
+      ]},
+      {name:'Extras',lectures:[
+        {t:'DevOps Extra - Advanced Docker',d:'1h 20m'},{t:'DevOps Extra - Kubernetes Advanced',d:'1h 30m'},
+      ]},
+    ]
+  },
+  {
+    id:'web3', name:'Web3 / Blockchain Cohort', color:'var(--color-purple)', light:'var(--color-purple-highlight)',
+    groups:[
+      {name:'Orientation & Cryptography',lectures:[
+        {t:'Web3 1.1 - Orientation (Part 1)',d:'1h 14m'},{t:'Web3 1.1 - Orientation (Part 2)',d:'1h 27m'},{t:'1.2 | Bitcoin Whitepaper',d:'57m'},{t:'2.1 | Public Key Cryptography',d:'2h 54m'},{t:'[Web3] 2.2 | Public Key Cryptography (from scratch)',d:'2h 2m'},
+      ]},
+      {name:'Wallets & Solana Basics',lectures:[
+        {t:'[Web3] 3.1 | How to create a Web based wallet',d:'2h 33m'},{t:'[Web3] 4.1 | Token Program and Solana Data model',d:'2h'},{t:'[Web3] 4.2 | Programs, Smart contracts (Offline)',d:'2h 25m'},
+      ]},
+      {name:'Solana Client Apps',lectures:[
+        {t:'[Web3] 5.1 | Solana client side apps',d:'2h 32m'},{t:'6.1 | Token Launchpad in React',d:'2h 7m'},{t:'[Web3] 7.1 - Accounts, Authorities and Owners',d:'1h 15m'},{t:'[Web3] 8.2 (offline) - Wallet Adapter from scratch',d:'1h 34m'},
+      ]},
+      {name:'Ethereum & Smart Contracts',lectures:[
+        {t:'Ethereum Basics & EVM',d:'2h 10m'},{t:'Solidity Intro',d:'2h 30m'},{t:'Smart Contract Patterns',d:'2h 15m'},{t:'ERC-20 Tokens',d:'1h 50m'},{t:'ERC-721 NFTs',d:'2h'},{t:'DeFi Concepts',d:'1h 45m'},
+      ]},
+      {name:'Advanced Web3',lectures:[
+        {t:'Web3.js & Ethers.js',d:'2h 5m'},{t:'IPFS & Decentralized Storage',d:'1h 40m'},{t:'Hardhat & Testing Smart Contracts',d:'2h 20m'},{t:'Web3 Deployment & Mainnet',d:'1h 55m'},{t:'Web3 Security',d:'2h'},{t:'Building a DEX UI',d:'2h 15m'},{t:'Building a Lending Protocol',d:'2h 30m'},{t:'Web3 Capstone',d:'2h 45m'},
+      ]},
+    ]
+  },
+  {
+    id:'extra', name:'Extra Content (Optional)', color:'var(--color-orange)', light:'var(--color-orange-highlight)',
+    groups:[
+      {name:'Superdev Fellowship',lectures:[
+        {t:'Superdev Fellowship - Session 1',d:'1h 30m'},{t:'Superdev Fellowship - Session 2',d:'1h 25m'},{t:'Superdev Fellowship - Session 3',d:'1h 35m'},{t:'Superdev Fellowship - Session 4',d:'1h 20m'},{t:'Superdev Fellowship - Session 5',d:'1h 40m'},{t:'Superdev Fellowship - Session 6',d:'1h 30m'},{t:'Superdev Fellowship - Session 7',d:'1h 25m'},{t:'Superdev Fellowship - Session 8',d:'1h 35m'},{t:'Superdev Fellowship - Session 9',d:'1h 20m'},{t:'Superdev Fellowship - Session 10',d:'1h 30m'},{t:'Superdev Fellowship - Session 11',d:'1h 25m'},{t:'Superdev Fellowship - Session 12',d:'1h 40m'},
+      ]},
+      {name:'Cohort 2 Offline',lectures:[
+        {t:'Cohort 2 Offline - 1',d:'2h'},{t:'Cohort 2 Offline - 2',d:'1h 50m'},{t:'Cohort 2 Offline - 3',d:'2h 10m'},{t:'Cohort 2 Offline - 4',d:'1h 45m'},{t:'Cohort 2 Offline - 5',d:'2h'},{t:'Cohort 2 Offline - 6',d:'1h 55m'},{t:'Cohort 2 Offline - 7',d:'2h 5m'},{t:'Cohort 2 Offline - 8',d:'1h 50m'},{t:'Cohort 2 Offline - 9',d:'2h'},{t:'Cohort 2 Offline - 10',d:'1h 45m'},{t:'Cohort 2 Offline - 11',d:'2h 10m'},{t:'Cohort 2 Offline - 12',d:'1h 55m'},{t:'Cohort 2 Offline - 13',d:'2h'},
+      ]},
+      {name:'DSA (Data Structures & Algorithms)',lectures:[
+        {t:'DSA 1 - Arrays & Strings',d:'2h'},{t:'DSA 2 - Two Pointers',d:'1h 45m'},{t:'DSA 3 - Sliding Window',d:'1h 50m'},{t:'DSA 4 - Hashing',d:'2h'},{t:'DSA 5 - Recursion',d:'2h 15m'},{t:'DSA 6 - Binary Search',d:'1h 55m'},{t:'DSA 7 - Sorting Algorithms',d:'2h'},{t:'DSA 8 - Linked Lists',d:'2h 10m'},{t:'DSA 9 - Stacks & Queues',d:'1h 50m'},{t:'DSA 10 - Trees',d:'2h 20m'},{t:'DSA 11 - BST',d:'2h'},{t:'DSA 12 - Heaps',d:'1h 55m'},{t:'DSA 13 - Graphs Introduction',d:'2h 10m'},{t:'DSA 14 - BFS',d:'1h 45m'},{t:'DSA 15 - DFS',d:'1h 50m'},{t:'DSA 16 - Dynamic Programming Intro',d:'2h 20m'},{t:'DSA 17 - DP Patterns',d:'2h 30m'},{t:'DSA 18 - Tries',d:'1h 40m'},{t:'DSA 19 - Segment Trees',d:'2h'},{t:'DSA 20 - Competitive Programming',d:'1h 55m'},
+      ]},
+      {name:'Ad-hoc & Misc',lectures:[
+        {t:'Ad-hoc - System Design Basics',d:'2h'},{t:'Ad-hoc - Backend at Scale',d:'1h 50m'},{t:'Ad-hoc - Redis & Caching',d:'1h 45m'},{t:'Ad-hoc - Message Queues',d:'1h 40m'},{t:'Ad-hoc - Microservices',d:'2h'},{t:'Ad-hoc - gRPC',d:'1h 30m'},{t:'Ad-hoc - GraphQL',d:'1h 55m'},{t:'Ad-hoc - Interview Prep',d:'1h 45m'},{t:'Ad-hoc - Resume Building',d:'1h'},{t:'Ad-hoc - Freelancing Tips',d:'55m'},
+      ]},
+    ]
+  },
+];
+
+const PHASES = [
+  {id:'p1',title:'Phase 1 — Foundations',subtitle:'JS, Node.js, Express, DOM',months:'Month 1–3',color:'var(--color-blue)',light:'var(--color-blue-highlight)',sections:['webdev'],groupRange:[0,3],target:45},
+  {id:'p2',title:'Phase 2 — React & TypeScript',subtitle:'React hooks, TS, State Mgmt',months:'Month 4–5',color:'var(--color-purple)',light:'var(--color-purple-highlight)',sections:['webdev'],groupRange:[3,6],target:40},
+  {id:'p3',title:'Phase 3 — DevOps',subtitle:'Docker, CI/CD, AWS, K8s',months:'Month 6–8',color:'var(--color-success)',light:'var(--color-success-highlight)',sections:['devops'],groupRange:[0,99],target:39},
+  {id:'p4',title:'Phase 4 — Web3/Blockchain',subtitle:'Solana, Ethereum, Smart Contracts',months:'Month 9–11',color:'var(--color-purple)',light:'var(--color-purple-highlight)',sections:['web3'],groupRange:[0,99],target:54},
+  {id:'p5',title:'Phase 5 — Consolidation',subtitle:'DSA, Extra content, Capstone',months:'Month 12',color:'var(--color-orange)',light:'var(--color-orange-highlight)',sections:['extra'],groupRange:[0,99],target:30},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {};
+let currentFilter = 'all';
+let currentSearch = '';
+let currentSection = null;
+
+function loadState(){
+  try{const s=localStorage.getItem('100x-tracker');if(s)state=JSON.parse(s);}catch(e){}
+}
+function saveState(){
+  try{localStorage.setItem('100x-tracker',JSON.stringify(state));}catch(e){}
+  // Also store in memory
+  window._savedState = JSON.stringify(state);
+}
+function getLectureId(sectionId,groupIdx,lectureIdx){return `${sectionId}_${groupIdx}_${lectureIdx}`}
+function isDone(id){return !!state[id]}
+function toggleDone(id){
+  if(state[id]){delete state[id]}else{state[id]={ts:Date.now()}}
+  saveState();updateAll();
+}
+
+// ============================================================
+// COUNTS
+// ============================================================
+function getAllLectures(){
+  const all=[];
+  SECTIONS.forEach(s=>{s.groups.forEach((g,gi)=>{g.lectures.forEach((l,li)=>{all.push({...l,id:getLectureId(s.id,gi,li),sectionId:s.id,groupName:g.name,sectionName:s.name,color:s.color,light:s.light})});});});
+  return all;
+}
+function countSection(sectionId){
+  const all=getAllLectures().filter(l=>l.sectionId===sectionId);
+  return{total:all.length,done:all.filter(l=>isDone(l.id)).length};
+}
+function getTotalStats(){
+  const all=getAllLectures();
+  return{total:all.length,done:all.filter(l=>isDone(l.id)).length};
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function updateAll(){
+  updateSidebar();
+  updateDashboard();
+  if(document.getElementById('view-lectures').classList.contains('active')){renderLectures();}
+  renderPhaseGrids();
+}
+
+function updateSidebar(){
+  const{total,done}=getTotalStats();
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('overall-pct').textContent=pct+'%';
+  document.getElementById('overall-fill').style.width=pct+'%';
+  document.getElementById('done-count').textContent=done;
+  document.getElementById('remain-count').textContent=total-done;
+  document.getElementById('total-count').textContent=total;
+  ['webdev','devops','web3','extra'].forEach(sid=>{
+    const{total:t,done:d}=countSection(sid);
+    const el=document.getElementById('nav-pct-'+sid);
+    if(el)el.textContent=t?Math.round(d/t*100)+'%':'0%';
+  });
+}
+
+function updateDashboard(){
+  const{total,done}=getTotalStats();
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('kpi-done').textContent=done;
+  document.getElementById('kpi-done-sub').textContent=`of ${total} total — ${pct}% complete`;
+  // Estimate hours: avg 1.65h per lecture
+  const hoursWatched=Math.round(done*1.65);
+  document.getElementById('kpi-hours').textContent=hoursWatched+'h';
+  // Days remaining
+  const deadline=new Date('2027-03-30');
+  const now=new Date();
+  const daysLeft=Math.ceil((deadline-now)/(1000*60*60*24));
+  document.getElementById('kpi-days').textContent=Math.max(0,daysLeft);
+  // Pace
+  const weeksLeft=Math.max(1,Math.ceil(daysLeft/7));
+  const remaining=total-done;
+  const pace=(remaining/weeksLeft).toFixed(1);
+  document.getElementById('kpi-pace').textContent=pace;
+  document.getElementById('kpi-pace-sub').textContent='lectures/week to finish on time';
+  // Streak grid
+  renderStreakGrid();
+}
+
+function renderStreakGrid(){
+  const grid=document.getElementById('streak-grid');
+  if(!grid)return;
+  const cells=[];
+  const now=Date.now();
+  const day=86400000;
+  // Build 52 weeks (364 days) of cells
+  for(let i=363;i>=0;i--){
+    const dayStart=now-i*day;
+    const dayEnd=dayStart+day;
+    const doneToday=Object.values(state).filter(v=>v.ts&&v.ts>=dayStart&&v.ts<dayEnd).length;
+    const level=doneToday===0?'':doneToday<=1?'done-1':doneToday<=3?'done-2':'done-3';
+    cells.push(`<div class="streak-cell ${level}" title="${new Date(dayStart).toLocaleDateString()}${doneToday?' — '+doneToday+' done':''}"></div>`);
+  }
+  grid.innerHTML=cells.join('');
+}
+
+function renderPhaseGrids(){
+  const allLectures=getAllLectures();
+  const phaseHtml=PHASES.map(p=>{
+    const pLectures=allLectures.filter(l=>p.sections.includes(l.sectionId));
+    const pDone=pLectures.filter(l=>isDone(l.id)).length;
+    const pTotal=pLectures.length;
+    const pct=pTotal?Math.round(pDone/pTotal*100):0;
+    return `<div class="phase-card">
+      <div class="phase-header">
+        <span class="phase-badge" style="background:${p.light};color:${p.color}">${p.months}</span>
+        <span class="phase-status">${pDone}/${pTotal}</span>
+      </div>
+      <div class="phase-title">${p.title}</div>
+      <div class="phase-subtitle">${p.subtitle}</div>
+      <div class="phase-progress">
+        <div class="progress-label"><span style="font-size:var(--text-xs);color:var(--color-text-muted)">Progress</span><span class="progress-pct" style="color:${p.color}">${pct}%</span></div>
+        <div class="phase-prog-bar"><div class="phase-prog-fill" style="width:${pct}%;background:${p.color}"></div></div>
+      </div>
+    </div>`;
+  }).join('');
+  ['phase-grid-dash','phase-grid-roadmap'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.innerHTML=phaseHtml;
+  });
+}
+
+// ============================================================
+// LECTURE RENDERING
+// ============================================================
+function renderLectures(){
+  const container=document.getElementById('lectures-content');
+  const search=currentSearch.toLowerCase();
+  let sectionsToShow=SECTIONS;
+  if(currentSection)sectionsToShow=SECTIONS.filter(s=>s.id===currentSection);
+
+  let html='';
+  let totalShown=0;
+
+  sectionsToShow.forEach(sec=>{
+    sec.groups.forEach((grp,gi)=>{
+      let filteredLectures=grp.lectures.map((l,li)=>({...l,id:getLectureId(sec.id,gi,li),sectionId:sec.id,color:sec.color,light:sec.light}));
+      // Filter by status
+      if(currentFilter==='done')filteredLectures=filteredLectures.filter(l=>isDone(l.id));
+      if(currentFilter==='todo')filteredLectures=filteredLectures.filter(l=>!isDone(l.id));
+      // Filter by section chip
+      if(['webdev','devops','web3','extra'].includes(currentFilter))filteredLectures=filteredLectures.filter(l=>l.sectionId===currentFilter);
+      // Search
+      if(search)filteredLectures=filteredLectures.filter(l=>l.t.toLowerCase().includes(search));
+      if(!filteredLectures.length)return;
+      totalShown+=filteredLectures.length;
+      const doneInGroup=filteredLectures.filter(l=>isDone(l.id)).length;
+      const pct=filteredLectures.length?Math.round(doneInGroup/filteredLectures.length*100):0;
+      const grpId=`grp-${sec.id}-${gi}`;
+      html+=`<div class="lecture-group">
+        <div class="lecture-group-header" onclick="toggleGroup('${grpId}')">
+          <span class="group-dot" style="background:${sec.color}"></span>
+          <span class="group-name">${grp.name} <span style="font-size:var(--text-xs);color:var(--color-text-faint);font-weight:400">— ${sec.name}</span></span>
+          <span class="group-progress-mini">${doneInGroup}/${filteredLectures.length}</span>
+          <span class="group-chevron" id="chev-${grpId}">▶</span>
+        </div>
+        <div class="group-prog-bar"><div class="group-prog-fill" style="width:${pct}%;background:${sec.color}"></div></div>
+        <div class="lecture-list" id="${grpId}">
+          ${filteredLectures.map(l=>`
+            <div class="lecture-item ${isDone(l.id)?'done':''}" onclick="toggleDone('${l.id}')" id="li-${l.id}">
+              <div class="lecture-check">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+              </div>
+              <span class="lecture-title">${l.t}</span>
+              <span class="lecture-duration">${l.d}</span>
+              <span class="lecture-tag" style="background:${l.light};color:${l.color}">${l.sectionId==='webdev'?'Web Dev':l.sectionId==='devops'?'DevOps':l.sectionId==='web3'?'Web3':'Extra'}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+    });
+  });
+
+  if(!html){
+    html=`<div class="empty-state"><div class="empty-icon">🔍</div><h3>No lectures found</h3><p>Try a different search or filter.</p></div>`;
+  }
+  container.innerHTML=html;
+  document.getElementById('lectures-count').textContent=totalShown+' lectures';
+  // Auto-open first group
+  const firstGrp=container.querySelector('.lecture-list');
+  if(firstGrp){firstGrp.classList.add('open');const chev=container.querySelector('.group-chevron');if(chev)chev.classList.add('open');}
+}
+
+function toggleGroup(id){
+  const list=document.getElementById(id);
+  const chev=document.getElementById('chev-'+id);
+  if(list){list.classList.toggle('open');if(chev)chev.classList.toggle('open');}
+}
+
+// ============================================================
+// FILTERS & VIEWS
+// ============================================================
+function switchView(viewId, navEl){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+viewId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(navEl)navEl.classList.add('active');
+  if(viewId==='lectures'){currentSection=null;renderLectures();}
+}
+
+function switchViewFilter(viewId, sectionId, navEl){
+  switchView(viewId, navEl);
+  currentSection=sectionId;
+  currentFilter='all';
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  document.querySelector('.filter-chip').classList.add('active');
+  renderLectures();
+  const titleMap={webdev:'Web Dev Lectures',devops:'DevOps Lectures',web3:'Web3 Lectures',extra:'Extra (Optional)'};
+  document.getElementById('lectures-title').textContent=(titleMap[sectionId]||'Lectures')+' 📚';
+}
+
+function setFilter(filter, el){
+  currentFilter=filter;
+  currentSection=['webdev','devops','web3','extra'].includes(filter)?filter:null;
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('lectures-title').textContent='All Lectures 📚';
+  renderLectures();
+}
+
+function filterLectures(val){
+  currentSearch=val;
+  renderLectures();
+}
+
+function resetAll(){
+  if(confirm('Reset all progress? This cannot be undone.')){state={};saveState();updateAll();}
+}
+
+function toggleTheme(){
+  const html=document.documentElement;
+  const current=html.getAttribute('data-theme');
+  html.setAttribute('data-theme',current==='dark'?'light':'dark');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadState();
+updateAll();
+renderLectures();
+renderPhaseGrids();
+</script>
+</body>
+</html>
