@@ -61,9 +61,7 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(1100px 520px at 105% -12%, color-mix(in srgb, var(--primary) 9%, transparent), transparent 60%),
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
@@ -172,7 +170,65 @@ a { color: inherit; }
 }
 .btn:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
 .btn.primary { background: var(--primary); border-color: var(--primary); color: white; }
-.content { padding: 30px; max-width: 1220px; }
+.btn:disabled { opacity: .48; cursor: not-allowed; transform: none; }
+.content { padding: 30px; max-width: 1240px; }
+.workspace { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); gap: 16px; margin-bottom: 18px; }
+.today-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 260px;
+  padding: 22px;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+.today-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 5px;
+  background: var(--primary);
+}
+.today-layout { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) 156px; gap: 22px; align-items: start; }
+.today-copy h3 { margin: 8px 0 10px; font-size: 30px; line-height: 1.1; letter-spacing: 0; max-width: 760px; }
+.today-copy p { margin: 0; color: var(--muted); max-width: 72ch; }
+.next-card {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid color-mix(in srgb, var(--primary) 38%, var(--line));
+  border-radius: var(--radius);
+  background: var(--primary-soft);
+}
+.next-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.next-title { margin: 0 0 6px; font-size: 18px; line-height: 1.3; }
+.next-sub { color: var(--muted); font-size: 13px; }
+.next-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.ring {
+  width: 156px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--primary) var(--ring, 0%), var(--panel-3) 0);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.ring-inner {
+  width: 116px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--panel);
+  text-align: center;
+  border: 1px solid var(--line);
+}
+.ring-inner strong { display: block; color: var(--primary); font: 800 27px/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.ring-inner span { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
+.summary-panel { display: grid; gap: 12px; }
+.stat-card { padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+.stat-card span { display: block; color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.stat-card strong { display: block; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 24px; line-height: 1.05; }
+.stat-card small { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; }
 .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr); gap: 16px; margin-bottom: 18px; }
 .panel { padding: 20px; }
 .panel.hero-main { background: var(--panel); border-color: var(--line-strong); }
@@ -212,20 +268,56 @@ a { color: inherit; }
   outline: none;
 }
 .search:focus, .select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
-.list { display: grid; gap: 8px; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 750;
+}
+.chip:hover { border-color: var(--primary); color: var(--primary); }
+.chip.active { background: var(--primary-soft); color: var(--primary); border-color: color-mix(in srgb, var(--primary) 45%, var(--line)); }
+.list-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 18px 0 10px; }
+.list-head h3 { margin: 0; font-size: 17px; }
+.list-head span { color: var(--muted); font-size: 13px; }
+.list { display: grid; gap: 14px; }
+.phase-group {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+}
+.phase-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 16px;
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+}
+.phase-head h4 { margin: 0; font-size: 14px; }
+.phase-head p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+.phase-count { color: var(--muted); font: 700 12px/1 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }
+.phase-items { display: grid; gap: 0; }
 .lecture {
   display: flex;
   align-items: center;
   gap: 14px;
   min-height: 64px;
   padding: 12px 16px;
-  border: 1px solid var(--line);
+  border: 0;
+  border-bottom: 1px solid var(--line);
   border-left: 4px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: 0;
   background: var(--panel);
   cursor: pointer;
   transition: border-color .15s ease, background .15s ease, transform .15s ease, box-shadow .15s ease;
 }
+.lecture:last-child { border-bottom: 0; }
 .lecture:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--line)); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.14); }
 [data-theme="light"] .lecture:hover { box-shadow: 0 8px 20px rgba(24,33,52,.08); }
 .lecture.done { background: color-mix(in srgb, var(--primary-soft) 55%, var(--panel)); }
@@ -280,14 +372,20 @@ a { color: inherit; }
   .overlay.open { pointer-events: auto; }
   .menuBtn { display: inline-flex; align-items: center; justify-content: center; }
   .main { width: 100%; }
+  .workspace { grid-template-columns: 1fr; }
   .hero { grid-template-columns: 1fr; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .controls { grid-template-columns: 1fr 160px 170px; }
 }
 @media (max-width: 680px) {
-  .topbar { padding: 14px 16px; gap: 10px; }
+  .topbar { align-items: stretch; flex-direction: column; padding: 14px 16px; gap: 10px; }
+  .topbar > div:first-child { width: 100%; }
   .topbar h2 { font-size: 18px; }
   .content { padding: 16px; }
+  .today-layout { grid-template-columns: 1fr; }
+  .ring { width: 128px; justify-self: start; }
+  .ring-inner { width: 96px; }
+  .today-copy h3 { font-size: 22px; }
   .panel { padding: 16px; }
   .panel.hero-main h3 { font-size: 20px; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -297,8 +395,9 @@ a { color: inherit; }
   .lecture { padding: 11px 12px; gap: 11px; }
   .lecture-top { gap: 8px; }
   .duration { margin-left: 0; }
-  .actions { width: 100%; }
-  .btn { flex: 1 1 auto; justify-content: center; }
+  .phase-head { grid-template-columns: 1fr; }
+  .actions { width: 100%; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; }
+  .btn { flex: 0 0 auto; justify-content: center; white-space: nowrap; }
 }
 </style>
 </head>
@@ -348,29 +447,38 @@ a { color: inherit; }
     </header>
 
     <div class="content">
-      <section class="hero">
-        <div class="panel hero-main">
-          <div class="eyebrow">100xDevs Cohort 3.0</div>
-          <h3>Track every lecture without losing momentum.</h3>
-          <p>This file contains the exact 156 lectures from your pasted list, in course order, with runtimes. Mark lectures as done, filter by track, and always know what to watch next.</p>
-          <div class="mini-metrics" aria-label="Course summary">
-            <div class="mini-metric">156 lectures</div>
-            <div class="mini-metric">315h 39m total</div>
-            <div class="mini-metric">Web Dev + DevOps + Web3</div>
+      <section class="workspace" aria-label="Current progress">
+        <div class="today-card">
+          <div class="today-layout">
+            <div class="today-copy">
+              <div class="eyebrow">Today</div>
+              <h3>Open the file, finish the next lecture, mark it done.</h3>
+              <p>The tracker now keeps the workflow focused on the next incomplete lecture instead of making you scan 156 rows every time.</p>
+              <div class="next-card">
+                <div class="next-meta" id="nextMeta"></div>
+                <h4 class="next-title" id="nextTitle">Next lecture</h4>
+                <div class="next-sub" id="nextLecture">Start with the first unchecked lecture.</div>
+                <div class="next-actions">
+                  <button class="btn primary" id="markNextBtn" type="button">Mark current done</button>
+                  <button class="btn" id="focusBtn" type="button">Focus next 10</button>
+                </div>
+              </div>
+            </div>
+            <div class="ring" id="progressRing">
+              <div class="ring-inner">
+                <strong id="ringPct">0%</strong>
+                <span>Complete</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="panel next-panel">
-          <div class="eyebrow">Up next</div>
-          <h3 id="nextTitle">Next lecture</h3>
-          <p id="nextLecture">Start with the first unchecked lecture.</p>
-        </div>
-      </section>
 
-      <section class="kpis" aria-label="Progress summary">
-        <div class="kpi"><span>Watched time</span><strong id="watchedTime">0h</strong></div>
-        <div class="kpi"><span>Total runtime</span><strong id="totalTime">315h 39m</strong></div>
-        <div class="kpi"><span>Visible</span><strong id="visibleCount">156</strong></div>
-        <div class="kpi"><span>Remaining time</span><strong id="remainingTime">315h 39m</strong></div>
+        <div class="summary-panel" aria-label="Progress summary">
+          <div class="stat-card"><span>Watched time</span><strong id="watchedTime">0h</strong><small id="watchedSub">0 lectures done</small></div>
+          <div class="stat-card"><span>Remaining</span><strong id="remainingTime">315h 39m</strong><small id="remainingSub">156 lectures left</small></div>
+          <div class="stat-card"><span>Total runtime</span><strong id="totalTime">315h 39m</strong><small>Across 156 videos</small></div>
+          <div class="stat-card"><span>Visible now</span><strong id="visibleCount">156</strong><small id="visibleSub">After filters</small></div>
+        </div>
       </section>
 
       <section class="controls" aria-label="Lecture filters">
@@ -388,6 +496,22 @@ a { color: inherit; }
           <option value="other">Other</option>
         </select>
       </section>
+
+      <div class="filter-chips" aria-label="Quick filters">
+        <button class="chip active" type="button" data-track-chip="all">All</button>
+        <button class="chip" type="button" data-track-chip="webdev">Web Dev</button>
+        <button class="chip" type="button" data-track-chip="devops">DevOps</button>
+        <button class="chip" type="button" data-track-chip="web3">Web3</button>
+        <button class="chip" type="button" data-status-chip="todo">Only to do</button>
+      </div>
+
+      <div class="list-head">
+        <div>
+          <h3>Course order</h3>
+          <span>Grouped into phases so the backlog is easier to scan.</span>
+        </div>
+        <span id="resultSummary">156 lectures</span>
+      </div>
 
       <section class="list" id="lectureList" aria-label="Lecture list"></section>
       <div class="empty" id="emptyState">No lectures match your current filters.</div>
@@ -1654,9 +1778,18 @@ const TRACKS = {
   web3: { label: 'Web3', color: 'var(--web3)' },
   other: { label: 'Other', color: 'var(--other)' }
 };
+const PHASES = [
+  { id: 'start', title: 'Start and orientation', detail: 'Discord, cohort orientation, first blockchain and web basics', from: 1, to: 15 },
+  { id: 'backend', title: 'JavaScript, DOM, Node and backend', detail: 'JS, DOM, Node runtime, Express, HTTP, auth and databases', from: 16, to: 41 },
+  { id: 'frontend', title: 'React, TypeScript and full-stack apps', detail: 'React, state, UI primitives, TypeScript, projects and SQL', from: 42, to: 69 },
+  { id: 'scale', title: 'Next.js, monorepos and deployment', detail: 'Next.js, monorepos, Excalidraw, Web3 apps and DevOps launch', from: 70, to: 95 },
+  { id: 'infra', title: 'Docker, cloud, Kubernetes and Solana Rust', detail: 'Docker, autoscaling, AWS, observability, Kubernetes and Rust programs', from: 96, to: 128 },
+  { id: 'advanced', title: 'Advanced systems and capstone projects', detail: 'Helm, Anchor, Betterstack, scaling, rate limiting and final projects', from: 129, to: 156 }
+];
 const STORAGE_KEY = 'cohort-3-tracker-progress-v1';
 const THEME_KEY = 'cohort-3-tracker-theme-v1';
 let progress = loadProgress();
+let focusMode = false;
 
 const listEl = document.getElementById('lectureList');
 const searchEl = document.getElementById('search');
@@ -1707,36 +1840,58 @@ function getFilteredLectures() {
   const query = searchEl.value.trim().toLowerCase();
   const status = statusFilterEl.value;
   const track = trackFilterEl.value;
-  return LECTURES.filter(lecture => {
+  let filtered = LECTURES.filter(lecture => {
     if (status === 'done' && !isDone(lecture.id)) return false;
     if (status === 'todo' && isDone(lecture.id)) return false;
     if (track !== 'all' && lecture.track !== track) return false;
     if (query && !(lecture.title.toLowerCase().includes(query) || String(lecture.n).includes(query))) return false;
     return true;
   });
+  if (focusMode) filtered = LECTURES.filter(lecture => !isDone(lecture.id)).slice(0, 10);
+  return filtered;
+}
+
+function getPhase(lecture) {
+  return PHASES.find(phase => lecture.n >= phase.from && lecture.n <= phase.to) || PHASES[PHASES.length - 1];
+}
+
+function renderLecture(lecture) {
+  const done = isDone(lecture.id);
+  const track = TRACKS[lecture.track];
+  return '<article class="lecture ' + (done ? 'done' : '') + '" id="' + lecture.id + '" data-track="' + lecture.track + '" tabindex="0" role="button" aria-pressed="' + done + '" onclick="toggleLecture(\'' + lecture.id + '\')">' +
+    '<button class="check" type="button" aria-label="Toggle lecture ' + lecture.n + '" onclick="event.stopPropagation(); toggleLecture(\'' + lecture.id + '\')">' +
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>' +
+    '</button>' +
+    '<div class="lecture-body">' +
+      '<div class="lecture-top">' +
+        '<span class="num">#' + String(lecture.n).padStart(3, '0') + '</span>' +
+        '<span class="badge ' + lecture.track + '">' + track.label + '</span>' +
+        '<span class="duration">' + escapeHtml(lecture.duration) + '</span>' +
+      '</div>' +
+      '<div class="title">' + escapeHtml(lecture.title) + '</div>' +
+    '</div>' +
+  '</article>';
 }
 
 function renderList() {
   const filtered = getFilteredLectures();
   emptyStateEl.style.display = filtered.length ? 'none' : 'block';
-  listEl.innerHTML = filtered.map(lecture => {
-    const done = isDone(lecture.id);
-    const track = TRACKS[lecture.track];
-    return '<article class="lecture ' + (done ? 'done' : '') + '" id="' + lecture.id + '" data-track="' + lecture.track + '" tabindex="0" role="button" aria-pressed="' + done + '" onclick="toggleLecture(\'' + lecture.id + '\')">' +
-      '<button class="check" type="button" aria-label="Toggle lecture ' + lecture.n + '" onclick="event.stopPropagation(); toggleLecture(\'' + lecture.id + '\')">' +
-        '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>' +
-      '</button>' +
-      '<div class="lecture-body">' +
-        '<div class="lecture-top">' +
-          '<span class="num">#' + String(lecture.n).padStart(3, '0') + '</span>' +
-          '<span class="badge ' + lecture.track + '">' + track.label + '</span>' +
-          '<span class="duration">' + escapeHtml(lecture.duration) + '</span>' +
-        '</div>' +
-        '<div class="title">' + escapeHtml(lecture.title) + '</div>' +
+  const html = PHASES.map(phase => {
+    const phaseLectures = filtered.filter(lecture => getPhase(lecture).id === phase.id);
+    if (!phaseLectures.length) return '';
+    const doneInPhase = phaseLectures.filter(lecture => isDone(lecture.id)).length;
+    return '<section class="phase-group">' +
+      '<div class="phase-head">' +
+        '<div><h4>' + escapeHtml(phase.title) + '</h4><p>' + escapeHtml(phase.detail) + '</p></div>' +
+        '<div class="phase-count">' + doneInPhase + '/' + phaseLectures.length + '</div>' +
       '</div>' +
-    '</article>';
+      '<div class="phase-items">' + phaseLectures.map(renderLecture).join('') + '</div>' +
+    '</section>';
   }).join('');
+  listEl.innerHTML = html;
   document.getElementById('visibleCount').textContent = filtered.length;
+  document.getElementById('visibleSub').textContent = focusMode ? 'Focus queue' : 'After filters';
+  document.getElementById('resultSummary').textContent = filtered.length + ' lecture' + (filtered.length === 1 ? '' : 's');
 }
 
 function renderStats() {
@@ -1749,17 +1904,23 @@ function renderStats() {
 
   document.getElementById('overallPct').textContent = pct + '%';
   document.getElementById('overallBar').style.width = pct + '%';
+  document.getElementById('ringPct').textContent = pct + '%';
+  document.getElementById('progressRing').style.setProperty('--ring', pct + '%');
   document.getElementById('doneCount').textContent = done;
   document.getElementById('leftCount').textContent = total - done;
   document.getElementById('totalCount').textContent = total;
   document.getElementById('watchedTime').textContent = formatSeconds(watchedSeconds);
+  document.getElementById('watchedSub').textContent = done + ' lecture' + (done === 1 ? '' : 's') + ' done';
   document.getElementById('totalTime').textContent = formatSeconds(totalSeconds);
   document.getElementById('remainingTime').textContent = formatSeconds(totalSeconds - watchedSeconds);
+  document.getElementById('remainingSub').textContent = (total - done) + ' lecture' + (total - done === 1 ? '' : 's') + ' left';
   document.getElementById('subline').textContent = done + ' of ' + total + ' lectures complete';
 
   const next = LECTURES.find(lecture => !isDone(lecture.id));
-  document.getElementById('nextLecture').textContent = next ? '#' + next.n + ' - ' + next.title + ' (' + next.duration + ')' : 'All lectures are marked complete.';
-  document.getElementById('nextTitle').textContent = next ? 'Next lecture' : 'Course complete';
+  document.getElementById('nextMeta').innerHTML = next ? '<span class="num">#' + String(next.n).padStart(3, '0') + '</span><span class="badge ' + next.track + '">' + TRACKS[next.track].label + '</span><span class="duration">' + escapeHtml(next.duration) + '</span>' : '';
+  document.getElementById('nextLecture').textContent = next ? 'Open the course, watch this video, then come back and mark it complete.' : 'All lectures are marked complete.';
+  document.getElementById('nextTitle').textContent = next ? next.title : 'Course complete';
+  document.getElementById('markNextBtn').disabled = !next;
 
   document.getElementById('trackStats').innerHTML = Object.keys(TRACKS).map(key => {
     const trackLectures = LECTURES.filter(lecture => lecture.track === key);
@@ -1776,6 +1937,7 @@ function renderStats() {
 function render() {
   renderStats();
   renderList();
+  updateChips();
 }
 
 function scrollToNextUndone() {
@@ -1787,6 +1949,48 @@ function scrollToNextUndone() {
   render();
   const node = document.getElementById(next.id);
   if (node) node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function markNextDone() {
+  const next = LECTURES.find(lecture => !isDone(lecture.id));
+  if (!next) return;
+  progress[next.id] = { completedAt: new Date().toISOString() };
+  saveProgress();
+  render();
+}
+
+function toggleFocusMode() {
+  focusMode = !focusMode;
+  if (focusMode) {
+    searchEl.value = '';
+    statusFilterEl.value = 'todo';
+    trackFilterEl.value = 'all';
+  }
+  document.getElementById('focusBtn').textContent = focusMode ? 'Show full list' : 'Focus next 10';
+  render();
+}
+
+function updateChips() {
+  document.querySelectorAll('[data-track-chip]').forEach(chip => {
+    chip.classList.toggle('active', chip.dataset.trackChip === trackFilterEl.value);
+  });
+  document.querySelectorAll('[data-status-chip]').forEach(chip => {
+    chip.classList.toggle('active', statusFilterEl.value === chip.dataset.statusChip && !focusMode);
+  });
+}
+
+function setTrackFilter(value) {
+  focusMode = false;
+  document.getElementById('focusBtn').textContent = 'Focus next 10';
+  trackFilterEl.value = value;
+  render();
+}
+
+function setStatusFilter(value) {
+  focusMode = false;
+  document.getElementById('focusBtn').textContent = 'Focus next 10';
+  statusFilterEl.value = statusFilterEl.value === value ? 'all' : value;
+  render();
 }
 
 function exportProgress() {
@@ -1847,15 +2051,23 @@ listEl.addEventListener('keydown', event => {
   }
 });
 
-searchEl.addEventListener('input', renderList);
-statusFilterEl.addEventListener('change', renderList);
-trackFilterEl.addEventListener('change', renderList);
+searchEl.addEventListener('input', () => { focusMode = false; document.getElementById('focusBtn').textContent = 'Focus next 10'; renderList(); updateChips(); });
+statusFilterEl.addEventListener('change', () => { focusMode = false; document.getElementById('focusBtn').textContent = 'Focus next 10'; renderList(); updateChips(); });
+trackFilterEl.addEventListener('change', () => { focusMode = false; document.getElementById('focusBtn').textContent = 'Focus next 10'; renderList(); updateChips(); });
 document.getElementById('nextBtn').addEventListener('click', scrollToNextUndone);
+document.getElementById('markNextBtn').addEventListener('click', markNextDone);
+document.getElementById('focusBtn').addEventListener('click', toggleFocusMode);
 document.getElementById('exportBtn').addEventListener('click', exportProgress);
 document.getElementById('resetBtn').addEventListener('click', resetProgress);
 document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 document.getElementById('menuBtn').addEventListener('click', openSidebar);
 overlayEl.addEventListener('click', closeSidebar);
+document.querySelectorAll('[data-track-chip]').forEach(chip => {
+  chip.addEventListener('click', () => setTrackFilter(chip.dataset.trackChip));
+});
+document.querySelectorAll('[data-status-chip]').forEach(chip => {
+  chip.addEventListener('click', () => setStatusFilter(chip.dataset.statusChip));
+});
 
 applySavedTheme();
 render();
