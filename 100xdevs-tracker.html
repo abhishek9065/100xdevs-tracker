@@ -106,7 +106,7 @@ a { color: inherit; }
   display: grid;
   place-items: center;
   border-radius: var(--radius);
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--webdev));
   color: white;
   font-weight: 850;
   letter-spacing: 0;
@@ -114,7 +114,7 @@ a { color: inherit; }
 }
 .brand h1 { margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: 0; }
 .brand p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
-.progress-card, .panel {
+.progress-card {
   background: var(--panel-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -187,10 +187,23 @@ a { color: inherit; }
   position: absolute;
   inset: 0 0 auto;
   height: 5px;
-  background: var(--primary);
+  background: linear-gradient(90deg, var(--webdev), var(--devops), var(--web3), var(--other));
+}
+.today-card::after {
+  content: "";
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, var(--primary-soft), transparent 70%);
+  pointer-events: none;
 }
 .today-layout { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) 156px; gap: 22px; align-items: start; }
-.today-copy h3 { margin: 8px 0 10px; font-size: 30px; line-height: 1.1; letter-spacing: 0; max-width: 760px; }
+.today-copy h3 {
+  margin: 8px 0 10px; font-size: 30px; line-height: 1.1; letter-spacing: 0; max-width: 760px;
+  font-weight: 850;
+  background: linear-gradient(90deg, var(--text), var(--soft));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
 .today-copy p { margin: 0; color: var(--muted); max-width: 72ch; }
 .next-card {
   margin-top: 18px;
@@ -209,8 +222,8 @@ a { color: inherit; }
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: conic-gradient(var(--primary) var(--ring, 0%), var(--panel-3) 0);
-  box-shadow: inset 0 0 0 1px var(--line);
+  background: conic-gradient(from -90deg, var(--primary), var(--webdev) var(--ring, 0%), var(--panel-3) 0);
+  box-shadow: inset 0 0 0 1px var(--line), 0 0 34px var(--primary-soft);
 }
 .ring-inner {
   width: 116px;
@@ -224,41 +237,27 @@ a { color: inherit; }
 }
 .ring-inner strong { display: block; color: var(--primary); font: 800 27px/1 ui-monospace, SFMono-Regular, Consolas, monospace; }
 .ring-inner span { display: block; margin-top: 4px; color: var(--muted); font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
-.summary-panel { display: grid; gap: 12px; }
-.stat-card { padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
-.stat-card span { display: block; color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
-.stat-card strong { display: block; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 24px; line-height: 1.05; }
-.stat-card small { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; }
-.hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr); gap: 16px; margin-bottom: 18px; }
-.panel { padding: 20px; }
-.panel.hero-main { background: var(--panel); border-color: var(--line-strong); }
-.panel.next-panel { background: var(--primary-soft); border-color: color-mix(in srgb, var(--primary) 40%, var(--line)); }
+.summary-panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); }
+.stat-item { padding: 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); }
+.stat-item:nth-child(2n) { border-right: 0; }
+.stat-item:nth-last-child(-n+2) { border-bottom: 0; }
+.stat-item span { display: block; color: var(--muted); font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+.stat-item strong { display: block; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 21px; line-height: 1.05; }
+.stat-item small { display: block; margin-top: 6px; color: var(--muted); font-size: 11px; }
 .eyebrow { color: var(--primary); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
-.panel h3 { margin: 0 0 8px; font-size: 18px; letter-spacing: 0; }
-.panel.hero-main h3 { font-size: 28px; line-height: 1.12; max-width: 720px; }
-.panel p { color: var(--muted); margin: 0; max-width: 76ch; }
-.mini-metrics { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-.mini-metric { border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; background: var(--panel-2); color: var(--soft); font-size: 12px; font-weight: 700; }
-.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
-.kpi { padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
-.kpi span { display: block; color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
-.kpi strong { display: block; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 24px; line-height: 1.05; }
 .controls {
   position: sticky;
   top: 74px;
   z-index: 4;
-  display: grid;
-  grid-template-columns: minmax(240px, 1fr) 180px 190px;
-  gap: 10px;
-  align-items: center;
-  margin: 18px 0;
+  margin: 18px 0 0;
   padding: 12px;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   backdrop-filter: blur(14px);
 }
-.search, .select {
+.search {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -267,8 +266,8 @@ a { color: inherit; }
   padding: 11px 12px;
   outline: none;
 }
-.search:focus, .select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
-.filter-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.search:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.filter-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
 .chip {
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -280,6 +279,7 @@ a { color: inherit; }
 }
 .chip:hover { border-color: var(--primary); color: var(--primary); }
 .chip.active { background: var(--primary-soft); color: var(--primary); border-color: color-mix(in srgb, var(--primary) 45%, var(--line)); }
+.chip-divider { width: 1px; height: 20px; background: var(--line); margin: 0 2px; }
 .list-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 18px 0 10px; }
 .list-head h3 { margin: 0; font-size: 17px; }
 .list-head span { color: var(--muted); font-size: 13px; }
@@ -373,9 +373,6 @@ a { color: inherit; }
   .menuBtn { display: inline-flex; align-items: center; justify-content: center; }
   .main { width: 100%; }
   .workspace { grid-template-columns: 1fr; }
-  .hero { grid-template-columns: 1fr; }
-  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .controls { grid-template-columns: 1fr 160px 170px; }
 }
 @media (max-width: 680px) {
   .topbar { align-items: stretch; flex-direction: column; padding: 14px 16px; gap: 10px; }
@@ -386,12 +383,10 @@ a { color: inherit; }
   .ring { width: 128px; justify-self: start; }
   .ring-inner { width: 96px; }
   .today-copy h3 { font-size: 22px; }
-  .panel { padding: 16px; }
-  .panel.hero-main h3 { font-size: 20px; }
-  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .kpi { padding: 12px; }
-  .kpi strong { font-size: 19px; }
-  .controls { position: static; grid-template-columns: 1fr; gap: 8px; }
+  .today-card { padding: 16px; }
+  .stat-item { padding: 12px; }
+  .stat-item strong { font-size: 18px; }
+  .controls { position: static; gap: 8px; }
   .lecture { padding: 11px 12px; gap: 11px; }
   .lecture-top { gap: 8px; }
   .duration { margin-left: 0; }
@@ -474,35 +469,28 @@ a { color: inherit; }
         </div>
 
         <div class="summary-panel" aria-label="Progress summary">
-          <div class="stat-card"><span>Watched time</span><strong id="watchedTime">0h</strong><small id="watchedSub">0 lectures done</small></div>
-          <div class="stat-card"><span>Remaining</span><strong id="remainingTime">315h 39m</strong><small id="remainingSub">156 lectures left</small></div>
-          <div class="stat-card"><span>Total runtime</span><strong id="totalTime">315h 39m</strong><small>Across 156 videos</small></div>
-          <div class="stat-card"><span>Visible now</span><strong id="visibleCount">156</strong><small id="visibleSub">After filters</small></div>
+          <div class="stat-grid">
+            <div class="stat-item"><span>Watched time</span><strong id="watchedTime">0h</strong><small id="watchedSub">0 lectures done</small></div>
+            <div class="stat-item"><span>Remaining</span><strong id="remainingTime">315h 39m</strong><small id="remainingSub">156 lectures left</small></div>
+            <div class="stat-item"><span>Total runtime</span><strong id="totalTime">315h 39m</strong><small>Across 156 videos</small></div>
+            <div class="stat-item"><span>Visible now</span><strong id="visibleCount">156</strong><small id="visibleSub">After filters</small></div>
+          </div>
         </div>
       </section>
 
-      <section class="controls" aria-label="Lecture filters">
+      <section class="controls" aria-label="Lecture search">
         <input class="search" id="search" type="search" placeholder="Search lectures, weeks, topics...">
-        <select class="select" id="statusFilter" aria-label="Status filter">
-          <option value="all">All statuses</option>
-          <option value="todo">To do</option>
-          <option value="done">Done</option>
-        </select>
-        <select class="select" id="trackFilter" aria-label="Track filter">
-          <option value="all">All tracks</option>
-          <option value="webdev">Web Dev</option>
-          <option value="devops">DevOps</option>
-          <option value="web3">Web3 / Blockchain</option>
-          <option value="other">Other</option>
-        </select>
       </section>
 
       <div class="filter-chips" aria-label="Quick filters">
-        <button class="chip active" type="button" data-track-chip="all">All</button>
+        <button class="chip active" type="button" data-track-chip="all">All tracks</button>
         <button class="chip" type="button" data-track-chip="webdev">Web Dev</button>
         <button class="chip" type="button" data-track-chip="devops">DevOps</button>
         <button class="chip" type="button" data-track-chip="web3">Web3</button>
-        <button class="chip" type="button" data-status-chip="todo">Only to do</button>
+        <button class="chip" type="button" data-track-chip="other">Other</button>
+        <span class="chip-divider"></span>
+        <button class="chip" type="button" data-status-chip="todo">To do</button>
+        <button class="chip" type="button" data-status-chip="done">Done</button>
       </div>
 
       <div class="list-head">
@@ -1790,11 +1778,11 @@ const STORAGE_KEY = 'cohort-3-tracker-progress-v1';
 const THEME_KEY = 'cohort-3-tracker-theme-v1';
 let progress = loadProgress();
 let focusMode = false;
+let statusFilterValue = 'all';
+let trackFilterValue = 'all';
 
 const listEl = document.getElementById('lectureList');
 const searchEl = document.getElementById('search');
-const statusFilterEl = document.getElementById('statusFilter');
-const trackFilterEl = document.getElementById('trackFilter');
 const emptyStateEl = document.getElementById('emptyState');
 
 function loadProgress() {
@@ -1838,8 +1826,8 @@ function toggleLecture(id) {
 
 function getFilteredLectures() {
   const query = searchEl.value.trim().toLowerCase();
-  const status = statusFilterEl.value;
-  const track = trackFilterEl.value;
+  const status = statusFilterValue;
+  const track = trackFilterValue;
   let filtered = LECTURES.filter(lecture => {
     if (status === 'done' && !isDone(lecture.id)) return false;
     if (status === 'todo' && isDone(lecture.id)) return false;
@@ -1943,8 +1931,9 @@ function render() {
 function scrollToNextUndone() {
   const next = LECTURES.find(lecture => !isDone(lecture.id));
   if (!next) return;
-  statusFilterEl.value = 'all';
-  trackFilterEl.value = 'all';
+  focusMode = false;
+  statusFilterValue = 'all';
+  trackFilterValue = 'all';
   searchEl.value = '';
   render();
   const node = document.getElementById(next.id);
@@ -1963,8 +1952,8 @@ function toggleFocusMode() {
   focusMode = !focusMode;
   if (focusMode) {
     searchEl.value = '';
-    statusFilterEl.value = 'todo';
-    trackFilterEl.value = 'all';
+    statusFilterValue = 'todo';
+    trackFilterValue = 'all';
   }
   document.getElementById('focusBtn').textContent = focusMode ? 'Show full list' : 'Focus next 10';
   render();
@@ -1972,24 +1961,24 @@ function toggleFocusMode() {
 
 function updateChips() {
   document.querySelectorAll('[data-track-chip]').forEach(chip => {
-    chip.classList.toggle('active', chip.dataset.trackChip === trackFilterEl.value);
+    chip.classList.toggle('active', chip.dataset.trackChip === trackFilterValue);
   });
   document.querySelectorAll('[data-status-chip]').forEach(chip => {
-    chip.classList.toggle('active', statusFilterEl.value === chip.dataset.statusChip && !focusMode);
+    chip.classList.toggle('active', statusFilterValue === chip.dataset.statusChip && !focusMode);
   });
 }
 
 function setTrackFilter(value) {
   focusMode = false;
   document.getElementById('focusBtn').textContent = 'Focus next 10';
-  trackFilterEl.value = value;
+  trackFilterValue = value;
   render();
 }
 
 function setStatusFilter(value) {
   focusMode = false;
   document.getElementById('focusBtn').textContent = 'Focus next 10';
-  statusFilterEl.value = statusFilterEl.value === value ? 'all' : value;
+  statusFilterValue = statusFilterValue === value ? 'all' : value;
   render();
 }
 
@@ -2052,8 +2041,6 @@ listEl.addEventListener('keydown', event => {
 });
 
 searchEl.addEventListener('input', () => { focusMode = false; document.getElementById('focusBtn').textContent = 'Focus next 10'; renderList(); updateChips(); });
-statusFilterEl.addEventListener('change', () => { focusMode = false; document.getElementById('focusBtn').textContent = 'Focus next 10'; renderList(); updateChips(); });
-trackFilterEl.addEventListener('change', () => { focusMode = false; document.getElementById('focusBtn').textContent = 'Focus next 10'; renderList(); updateChips(); });
 document.getElementById('nextBtn').addEventListener('click', scrollToNextUndone);
 document.getElementById('markNextBtn').addEventListener('click', markNextDone);
 document.getElementById('focusBtn').addEventListener('click', toggleFocusMode);
