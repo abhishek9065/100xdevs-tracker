@@ -61,15 +61,25 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--bg);
+  background:
+    radial-gradient(1100px 520px at 105% -12%, color-mix(in srgb, var(--primary) 9%, transparent), transparent 60%),
+    var(--bg);
   color: var(--text);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
 a { color: inherit; }
-.shell { min-height: 100vh; display: grid; grid-template-columns: 304px minmax(0, 1fr); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+.btn:focus-visible, .check:focus-visible, .lecture:focus-visible, .search:focus-visible, .select:focus-visible {
+  outline: 2px solid var(--primary); outline-offset: 2px;
+}
+.shell { min-height: 100vh; display: grid; grid-template-columns: 300px minmax(0, 1fr); }
 .sidebar {
   position: sticky;
   top: 0;
@@ -78,7 +88,19 @@ a { color: inherit; }
   border-right: 1px solid var(--line);
   background: var(--panel);
   overflow: auto;
+  transition: transform .25s ease;
 }
+.menuBtn { display: none; }
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 10, 16, .55);
+  z-index: 40;
+  opacity: 0;
+  transition: opacity .2s ease;
+}
+.overlay.open { opacity: 1; }
 .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
 .mark {
   width: 44px;
@@ -136,6 +158,9 @@ a { color: inherit; }
 .topbar h2 { margin: 0; font-size: 21px; letter-spacing: 0; }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--panel);
@@ -189,29 +214,30 @@ a { color: inherit; }
 .search:focus, .select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
 .list { display: grid; gap: 8px; }
 .lecture {
-  display: grid;
-  grid-template-columns: auto 58px minmax(0, 1fr) auto auto;
+  display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   min-height: 64px;
-  padding: 12px 14px;
+  padding: 12px 16px;
   border: 1px solid var(--line);
   border-left: 4px solid var(--line);
   border-radius: var(--radius);
   background: var(--panel);
   cursor: pointer;
-  transition: border-color .15s ease, background .15s ease, transform .15s ease;
+  transition: border-color .15s ease, background .15s ease, transform .15s ease, box-shadow .15s ease;
 }
-.lecture:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--line)); transform: translateY(-1px); }
+.lecture:hover { border-color: color-mix(in srgb, var(--primary) 50%, var(--line)); transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,.14); }
+[data-theme="light"] .lecture:hover { box-shadow: 0 8px 20px rgba(24,33,52,.08); }
 .lecture.done { background: color-mix(in srgb, var(--primary-soft) 55%, var(--panel)); }
 .lecture[data-track="webdev"] { border-left-color: var(--webdev); }
 .lecture[data-track="devops"] { border-left-color: var(--devops); }
 .lecture[data-track="web3"] { border-left-color: var(--web3); }
 .lecture[data-track="other"] { border-left-color: var(--other); }
 .check {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
   border: 2px solid var(--line);
   background: transparent;
   display: grid;
@@ -224,11 +250,13 @@ a { color: inherit; }
 .lecture.done .check { background: var(--primary); border-color: var(--primary); }
 .check svg { opacity: 0; }
 .lecture.done .check svg { opacity: 1; }
+.lecture-body { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.lecture-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .num { color: var(--muted); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 13px; }
 .title { min-width: 0; font-weight: 700; line-height: 1.35; }
 .lecture.done .title { color: var(--soft); text-decoration: line-through; text-decoration-color: var(--muted); }
-.duration { color: var(--muted); white-space: nowrap; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; }
-.badge { border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 780; white-space: nowrap; }
+.duration { color: var(--muted); white-space: nowrap; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; margin-left: auto; }
+.badge { flex: none; border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 780; white-space: nowrap; }
 .badge.webdev { color: var(--webdev); background: var(--webdev-soft); }
 .badge.devops { color: var(--devops); background: var(--devops-soft); }
 .badge.web3 { color: var(--web3); background: var(--web3-soft); }
@@ -236,28 +264,48 @@ a { color: inherit; }
 .empty { display: none; text-align: center; color: var(--muted); padding: 42px 16px; border: 1px dashed var(--line); border-radius: var(--radius); }
 .footer { color: var(--muted); font-size: 12px; margin: 18px 0 0; }
 @media (max-width: 980px) {
-  .shell { grid-template-columns: 1fr; }
-  .sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  .shell { display: block; }
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: 300px;
+    max-width: 85vw;
+    z-index: 50;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .overlay { display: block; pointer-events: none; }
+  .overlay.open { pointer-events: auto; }
+  .menuBtn { display: inline-flex; align-items: center; justify-content: center; }
+  .main { width: 100%; }
   .hero { grid-template-columns: 1fr; }
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .controls { top: 88px; grid-template-columns: 1fr 160px 170px; }
+  .controls { grid-template-columns: 1fr 160px 170px; }
 }
 @media (max-width: 680px) {
-  .topbar { align-items: flex-start; flex-direction: column; padding: 16px; }
+  .topbar { padding: 14px 16px; gap: 10px; }
+  .topbar h2 { font-size: 18px; }
   .content { padding: 16px; }
-  .panel.hero-main h3 { font-size: 22px; }
-  .kpis { grid-template-columns: 1fr; }
-  .controls { position: static; grid-template-columns: 1fr; }
-  .lecture { grid-template-columns: auto 44px minmax(0, 1fr); gap: 9px; align-items: start; }
-  .duration, .badge { grid-column: 3; justify-self: start; }
+  .panel { padding: 16px; }
+  .panel.hero-main h3 { font-size: 20px; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .kpi { padding: 12px; }
+  .kpi strong { font-size: 19px; }
+  .controls { position: static; grid-template-columns: 1fr; gap: 8px; }
+  .lecture { padding: 11px 12px; gap: 11px; }
+  .lecture-top { gap: 8px; }
+  .duration { margin-left: 0; }
   .actions { width: 100%; }
-  .btn { flex: 1; justify-content: center; }
+  .btn { flex: 1 1 auto; justify-content: center; }
 }
 </style>
 </head>
 <body>
 <div class="shell">
-  <aside class="sidebar">
+  <div class="overlay" id="overlay"></div>
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="mark">1x</div>
       <div>
@@ -284,9 +332,12 @@ a { color: inherit; }
 
   <main class="main">
     <header class="topbar">
-      <div>
-        <h2>Lecture Tracker</h2>
-        <div style="color:var(--muted);font-size:13px" id="subline">156 videos loaded</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="btn menuBtn" id="menuBtn" type="button" aria-label="Open menu">☰</button>
+        <div>
+          <h2>Lecture Tracker</h2>
+          <div style="color:var(--muted);font-size:13px" id="subline">156 videos loaded</div>
+        </div>
       </div>
       <div class="actions">
         <button class="btn" id="themeBtn" type="button">Theme</button>
@@ -1671,14 +1722,18 @@ function renderList() {
   listEl.innerHTML = filtered.map(lecture => {
     const done = isDone(lecture.id);
     const track = TRACKS[lecture.track];
-    return '<article class="lecture ' + (done ? 'done' : '') + '" id="' + lecture.id + '" data-track="' + lecture.track + '" onclick="toggleLecture(\'' + lecture.id + '\')">' +
+    return '<article class="lecture ' + (done ? 'done' : '') + '" id="' + lecture.id + '" data-track="' + lecture.track + '" tabindex="0" role="button" aria-pressed="' + done + '" onclick="toggleLecture(\'' + lecture.id + '\')">' +
       '<button class="check" type="button" aria-label="Toggle lecture ' + lecture.n + '" onclick="event.stopPropagation(); toggleLecture(\'' + lecture.id + '\')">' +
         '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>' +
       '</button>' +
-      '<div class="num">#' + String(lecture.n).padStart(3, '0') + '</div>' +
-      '<div class="title">' + escapeHtml(lecture.title) + '</div>' +
-      '<div class="duration">' + escapeHtml(lecture.duration) + '</div>' +
-      '<div class="badge ' + lecture.track + '">' + track.label + '</div>' +
+      '<div class="lecture-body">' +
+        '<div class="lecture-top">' +
+          '<span class="num">#' + String(lecture.n).padStart(3, '0') + '</span>' +
+          '<span class="badge ' + lecture.track + '">' + track.label + '</span>' +
+          '<span class="duration">' + escapeHtml(lecture.duration) + '</span>' +
+        '</div>' +
+        '<div class="title">' + escapeHtml(lecture.title) + '</div>' +
+      '</div>' +
     '</article>';
   }).join('');
   document.getElementById('visibleCount').textContent = filtered.length;
@@ -1770,6 +1825,28 @@ function toggleTheme() {
   }
 }
 
+const sidebarEl = document.getElementById('sidebar');
+const overlayEl = document.getElementById('overlay');
+
+function openSidebar() {
+  sidebarEl.classList.add('open');
+  overlayEl.classList.add('open');
+}
+
+function closeSidebar() {
+  sidebarEl.classList.remove('open');
+  overlayEl.classList.remove('open');
+}
+
+listEl.addEventListener('keydown', event => {
+  const item = event.target.closest('.lecture');
+  if (!item) return;
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    toggleLecture(item.id);
+  }
+});
+
 searchEl.addEventListener('input', renderList);
 statusFilterEl.addEventListener('change', renderList);
 trackFilterEl.addEventListener('change', renderList);
@@ -1777,6 +1854,8 @@ document.getElementById('nextBtn').addEventListener('click', scrollToNextUndone)
 document.getElementById('exportBtn').addEventListener('click', exportProgress);
 document.getElementById('resetBtn').addEventListener('click', resetProgress);
 document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+document.getElementById('menuBtn').addEventListener('click', openSidebar);
+overlayEl.addEventListener('click', closeSidebar);
 
 applySavedTheme();
 render();
