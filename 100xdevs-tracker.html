@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0e1116">
+<meta name="description" content="A private, offline-friendly progress tracker for the 100xDevs Cohort 3.0 course.">
+<link rel="manifest" href="manifest.webmanifest">
 <title>100xDevs Cohort 3.0 Tracker</title>
 <style>
 :root {
@@ -57,6 +59,7 @@
   --shadow: 0 18px 44px rgba(24,33,52,.10);
 }
 * { box-sizing: border-box; }
+[hidden] { display: none!important; }
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
@@ -132,7 +135,7 @@ a { color: inherit; }
 .side-stat strong { display: block; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 18px; }
 .side-stat span { color: var(--muted); font-size: 11px; }
 .track-list { display: grid; gap: 8px; margin: 16px 0; }
-.track-row { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 11px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.03); }
+.track-row { width: 100%; display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 11px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.03); color: var(--text); text-align: left; }
 [data-theme="light"] .track-row { background: #f8fafc; }
 .dot { width: 10px; height: 10px; border-radius: 99px; }
 .track-row span { color: var(--muted); font-size: 12px; }
@@ -166,11 +169,14 @@ a { color: inherit; }
   padding: 9px 13px;
   font-size: 13px;
   font-weight: 700;
+  text-decoration: none;
   transition: border-color .15s ease, color .15s ease, background .15s ease, transform .15s ease;
 }
 .btn:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
 .btn.primary { background: var(--primary); border-color: var(--primary); color: white; }
 .btn:disabled { opacity: .48; cursor: not-allowed; transform: none; }
+.btn[aria-disabled="true"] { opacity: .48; pointer-events: none; }
+:where(button, a, input, select, textarea, summary):focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .content { padding: 30px; max-width: 1240px; }
 .workspace { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); gap: 16px; margin-bottom: 18px; }
 .today-card {
@@ -394,23 +400,138 @@ a { color: inherit; }
   .actions { width: 100%; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; }
   .btn { flex: 0 0 auto; justify-content: center; white-space: nowrap; }
 }
+
+/* Product polish and accessibility */
+.content { margin-inline: auto; width: 100%; }
+.skip-link { position: fixed; left: 16px; top: 12px; z-index: 100; transform: translateY(-180%); padding: 9px 13px; border-radius: var(--radius); background: var(--primary); color: white; font-weight: 800; }
+.skip-link:focus { transform: translateY(0); }
+.sr-only { position: absolute!important; width: 1px!important; height: 1px!important; padding: 0!important; margin: -1px!important; overflow: hidden!important; clip: rect(0,0,0,0)!important; white-space: nowrap!important; border: 0!important; }
+.topbar { min-height: 74px; }
+.topbar-title { display:flex; align-items:center; gap:12px; min-width: 0; }
+.actions { align-items: center; flex-wrap: nowrap; overflow: visible; }
+.btn.danger { color: var(--danger); }
+.btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+.btn.icon-only { width: 40px; padding-inline: 0; justify-content: center; }
+.today-card { min-height: 0; padding: 20px; }
+.today-copy h3 { margin-top: 4px; font-size: clamp(22px, 3vw, 28px); }
+.today-copy > p { display: none; }
+.next-card { margin-top: 12px; padding: 14px; }
+.next-title { font-size: 17px; }
+.ring { width: 138px; }
+.ring-inner { width: 102px; }
+.ring-inner strong { font-size: 24px; }
+.ring-inner span { letter-spacing: .04em; }
+.more-menu { position: relative; }
+.more-menu > summary { list-style: none; }
+.more-menu > summary::-webkit-details-marker { display: none; }
+.menu-popover { position: absolute; top: calc(100% + 8px); right: 0; z-index: 30; width: 210px; padding: 7px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); box-shadow: var(--shadow); }
+.menu-popover button { width: 100%; justify-content: flex-start; border-color: transparent; background: transparent; }
+.goal-card { padding: 14px; margin-top: 14px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,255,255,.03); }
+.goal-card label { display: block; color: var(--muted); font-size: 12px; font-weight: 750; margin-bottom: 7px; }
+.goal-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.goal-row input { min-width: 0; width: 100%; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); padding: 8px 10px; }
+.goal-hint { margin: 8px 0 0; color: var(--muted); font-size: 11px; }
+.recent-list { display: grid; gap: 7px; margin-top: 8px; }
+.recent-item { color: var(--muted); font-size: 11px; line-height: 1.35; }
+.recent-item strong { color: var(--soft); }
+.controls { display: grid; grid-template-columns: minmax(220px, 1fr) auto auto; gap: 10px; align-items: center; }
+.select { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); color: var(--text); padding: 10px 34px 10px 11px; }
+.filter-chips { margin-top: 10px; }
+.filter-note { display: none; align-items: center; justify-content: space-between; gap: 12px; margin: 10px 0; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--primary) 40%, var(--line)); border-radius: var(--radius); color: var(--soft); background: var(--primary-soft); font-size: 13px; }
+.filter-note.show { display: flex; }
+.chip[aria-pressed="true"] { background: var(--primary-soft); color: var(--primary); border-color: color-mix(in srgb, var(--primary) 45%, var(--line)); }
+.phase-head { display: block; }
+.phase-toggle { width: 100%; display: grid; grid-template-columns: minmax(0,1fr) auto auto; align-items: center; gap: 12px; padding: 0; border: 0; color: inherit; background: transparent; text-align: left; }
+.phase-copy, .phase-title, .phase-detail { display: block; }
+.phase-title { font-size: 14px; font-weight: 700; }
+.phase-detail { margin-top: 3px; color: var(--muted); font-size: 12px; }
+.phase-chevron { color: var(--muted); transition: transform .18s ease; }
+.phase-group.collapsed .phase-chevron { transform: rotate(-90deg); }
+.phase-group.collapsed .phase-items { display: none; }
+.lecture { cursor: default; }
+.lecture:hover { transform: none; }
+.lecture-actions { flex: none; display: flex; align-items: center; gap: 5px; }
+.row-action { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid transparent; border-radius: 8px; background: transparent; color: var(--muted); text-decoration: none; }
+.row-action:hover, .row-action:focus-visible { color: var(--primary); border-color: var(--line); background: var(--panel-2); }
+.row-action.bookmarked { color: var(--other); }
+.list.compact .lecture { min-height: 50px; padding-block: 8px; }
+.list.compact .lecture-body { gap: 2px; }
+.list.compact .lecture-top { gap: 7px; }
+.empty .btn { margin-top: 12px; }
+.toast { position: fixed; left: 50%; bottom: 24px; z-index: 90; display: flex; align-items: center; gap: 14px; max-width: min(92vw, 520px); padding: 12px 14px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--panel-2); box-shadow: var(--shadow); color: var(--text); transform: translate(-50%, 160%); opacity: 0; transition: transform .2s ease, opacity .2s ease; }
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+.toast button { border: 0; background: transparent; color: var(--primary); font-weight: 800; }
+dialog { width: min(92vw, 560px); padding: 0; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--panel); color: var(--text); box-shadow: var(--shadow); }
+dialog::backdrop { background: rgba(8,10,16,.68); backdrop-filter: blur(3px); }
+.dialog-body { padding: 20px; }
+.dialog-body h3 { margin: 0 0 6px; }
+.dialog-body p { margin: 0 0 16px; color: var(--muted); }
+.dialog-body textarea { width: 100%; min-height: 170px; resize: vertical; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel-2); color: var(--text); padding: 12px; }
+.dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.mobile-close { display: none; margin-left: auto; }
+.section-kicker { margin: 18px 0 6px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+
+@media (max-width: 980px) {
+  .mobile-close { display: inline-flex; }
+  body.sidebar-open { overflow: hidden; }
+}
+@media (max-width: 760px) {
+  .controls { grid-template-columns: 1fr 1fr; }
+  .controls .search-wrap { grid-column: 1 / -1; }
+  .today-layout { grid-template-columns: 1fr; }
+  .ring { display: none; }
+  .lecture { align-items: flex-start; }
+  .lecture-actions { align-self: center; }
+  .row-action.open-link { display: none; }
+}
+@media (max-width: 680px) {
+  .topbar { flex-direction: row; align-items: center; }
+  .topbar-title { flex: 1; }
+  .topbar-title h2 { white-space: nowrap; }
+  .topbar-title #subline { display: none; }
+  .actions { width: auto; overflow: visible; margin-left: auto; }
+  #themeBtn .button-label, #nextBtn .button-label { display: none; }
+  #themeBtn, #nextBtn { width: 40px; padding-inline: 0; }
+  .menu-popover { position: fixed; top: 68px; right: 12px; }
+  .workspace { margin-bottom: 12px; }
+  .today-card { padding: 14px; }
+  .today-copy h3 { font-size: 20px; }
+  .next-actions .btn { flex: 1 1 auto; }
+  .filter-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .chip { flex: 0 0 auto; }
+  .chip-divider { flex: 0 0 1px; }
+  .list-head { align-items: flex-start; }
+  .list-head > div span { display: none; }
+  .phase-toggle { grid-template-columns: minmax(0,1fr) auto; }
+  .phase-toggle .phase-count { grid-column: 1; }
+  .phase-chevron { grid-column: 2; grid-row: 1 / span 2; }
+  .lecture { gap: 9px; }
+  .check { width: 38px; height: 38px; }
+  .lecture-actions { gap: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms!important; animation-iteration-count: 1!important; transition-duration: .01ms!important; }
+}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#lectureList">Skip to lecture list</a>
 <div class="shell">
-  <div class="overlay" id="overlay"></div>
-  <aside class="sidebar" id="sidebar">
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+  <aside class="sidebar" id="sidebar" aria-label="Progress and course navigation">
     <div class="brand">
       <div class="mark">1x</div>
       <div>
         <h1>Cohort 3.0 Tracker</h1>
         <p>Complete Web Development + DevOps + Blockchain</p>
       </div>
+      <button class="btn icon-only mobile-close" id="closeSidebarBtn" type="button" aria-label="Close menu">✕</button>
     </div>
 
     <section class="progress-card" aria-label="Overall progress">
       <div class="progress-head"><span>Overall progress</span><strong id="overallPct">0%</strong></div>
-      <div class="meter"><div id="overallBar"></div></div>
+      <div class="meter" id="overallMeter" role="progressbar" aria-label="Lectures completed" aria-valuemin="0" aria-valuemax="156" aria-valuenow="0"><div id="overallBar"></div></div>
       <div class="side-stats">
         <div class="side-stat"><strong id="doneCount">0</strong><span>Done</span></div>
         <div class="side-stat"><strong id="leftCount">156</strong><span>Left</span></div>
@@ -420,24 +541,45 @@ a { color: inherit; }
 
     <div class="track-list" id="trackStats"></div>
 
-    <p class="side-note">Progress is saved automatically in this browser with localStorage. Open this HTML after each lecture and click the checkbox.</p>
+    <div class="goal-card">
+      <label for="weeklyGoal">Weekly study goal (hours)</label>
+      <div class="goal-row">
+        <input id="weeklyGoal" type="number" min="1" max="80" step="1" value="7" inputmode="numeric">
+        <button class="btn" id="saveGoalBtn" type="button">Save</button>
+      </div>
+      <p class="goal-hint" id="goalHint">Used to estimate your completion date.</p>
+    </div>
+
+    <div class="section-kicker">Recently completed</div>
+    <div class="recent-list" id="recentList"><div class="recent-item">Nothing completed yet.</div></div>
+
+    <p class="side-note">Progress is saved automatically in this browser. Clearing browser data can remove it, so export an occasional backup.</p>
     <p class="side-note"><a href="https://100xdevs.com/new-courses/14/content?activeTab=Content" target="_blank" rel="noreferrer">Open 100xDevs course content</a></p>
   </aside>
 
   <main class="main">
     <header class="topbar">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <button class="btn menuBtn" id="menuBtn" type="button" aria-label="Open menu">☰</button>
+      <div class="topbar-title">
+        <button class="btn menuBtn icon-only" id="menuBtn" type="button" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">☰</button>
         <div>
           <h2>Lecture Tracker</h2>
           <div style="color:var(--muted);font-size:13px" id="subline">156 videos loaded</div>
         </div>
       </div>
       <div class="actions">
-        <button class="btn" id="themeBtn" type="button">Theme</button>
-        <button class="btn" id="nextBtn" type="button">Next undone</button>
-        <button class="btn" id="exportBtn" type="button">Export</button>
-        <button class="btn" id="resetBtn" type="button">Reset</button>
+        <button class="btn" id="themeBtn" type="button" aria-pressed="false"><span id="themeIcon" aria-hidden="true">☀</span><span class="button-label" id="themeLabel">Light mode</span></button>
+        <button class="btn primary" id="nextBtn" type="button"><span aria-hidden="true">→</span><span class="button-label">Next undone</span></button>
+        <details class="more-menu" id="moreMenu">
+          <summary class="btn icon-only" aria-label="More actions">•••</summary>
+          <div class="menu-popover">
+            <button class="btn" id="densityBtn" type="button">Compact list</button>
+            <button class="btn" id="installBtn" type="button" hidden>Install app</button>
+            <button class="btn" id="exportBtn" type="button">Export progress</button>
+            <button class="btn" id="importBtn" type="button">Import progress</button>
+            <button class="btn danger" id="resetBtn" type="button">Reset progress</button>
+          </div>
+        </details>
+        <input class="sr-only" id="importFile" type="file" accept="application/json,.json">
       </div>
     </header>
 
@@ -447,14 +589,15 @@ a { color: inherit; }
           <div class="today-layout">
             <div class="today-copy">
               <div class="eyebrow">Today</div>
-              <h3>Open the file, finish the next lecture, mark it done.</h3>
+              <h3>Continue your learning momentum.</h3>
               <p>The tracker now keeps the workflow focused on the next incomplete lecture instead of making you scan 156 rows every time.</p>
               <div class="next-card">
                 <div class="next-meta" id="nextMeta"></div>
                 <h4 class="next-title" id="nextTitle">Next lecture</h4>
                 <div class="next-sub" id="nextLecture">Start with the first unchecked lecture.</div>
                 <div class="next-actions">
-                  <button class="btn primary" id="markNextBtn" type="button">Mark current done</button>
+                  <a class="btn primary" id="openNextBtn" href="https://100xdevs.com/new-courses/14/content?activeTab=Content" target="_blank" rel="noreferrer">Open lecture ↗</a>
+                  <button class="btn" id="markNextBtn" type="button">Complete next lecture</button>
                   <button class="btn" id="focusBtn" type="button">Focus next 10</button>
                 </div>
               </div>
@@ -462,7 +605,7 @@ a { color: inherit; }
             <div class="ring" id="progressRing">
               <div class="ring-inner">
                 <strong id="ringPct">0%</strong>
-                <span>Complete</span>
+                <span>Lectures</span>
               </div>
             </div>
           </div>
@@ -474,39 +617,75 @@ a { color: inherit; }
             <div class="stat-item"><span>Remaining</span><strong id="remainingTime">315h 39m</strong><small id="remainingSub">156 lectures left</small></div>
             <div class="stat-item"><span>Total runtime</span><strong id="totalTime">315h 39m</strong><small>Across 156 videos</small></div>
             <div class="stat-item"><span>Visible now</span><strong id="visibleCount">156</strong><small id="visibleSub">After filters</small></div>
+            <div class="stat-item"><span>Runtime complete</span><strong id="runtimePct">0%</strong><small>Weighted by video length</small></div>
+            <div class="stat-item"><span>Estimated finish</span><strong id="etaDate">—</strong><small id="etaSub">Set from your weekly goal</small></div>
           </div>
         </div>
       </section>
 
       <section class="controls" aria-label="Lecture search">
-        <input class="search" id="search" type="search" placeholder="Search lectures, weeks, topics...">
+        <div class="search-wrap">
+          <label class="sr-only" for="search">Search lectures</label>
+          <input class="search" id="search" type="search" placeholder="Search lectures, weeks, topics..." autocomplete="off">
+        </div>
+        <label class="sr-only" for="sortSelect">Sort lectures</label>
+        <select class="select" id="sortSelect">
+          <option value="course">Course order</option>
+          <option value="shortest">Shortest first</option>
+          <option value="longest">Longest first</option>
+          <option value="recent">Recently completed</option>
+        </select>
+        <button class="btn" id="clearFiltersBtn" type="button">Clear filters</button>
       </section>
 
+      <div class="filter-note" id="filterNote"><span id="filterNoteText">Focus mode is active.</span><button class="btn" id="exitFocusBtn" type="button">Show all</button></div>
+
       <div class="filter-chips" aria-label="Quick filters">
-        <button class="chip active" type="button" data-track-chip="all">All tracks</button>
-        <button class="chip" type="button" data-track-chip="webdev">Web Dev</button>
-        <button class="chip" type="button" data-track-chip="devops">DevOps</button>
-        <button class="chip" type="button" data-track-chip="web3">Web3</button>
-        <button class="chip" type="button" data-track-chip="other">Other</button>
-        <span class="chip-divider"></span>
-        <button class="chip" type="button" data-status-chip="todo">To do</button>
-        <button class="chip" type="button" data-status-chip="done">Done</button>
+        <button class="chip active" type="button" data-track-chip="all" aria-pressed="true">All tracks</button>
+        <button class="chip" type="button" data-track-chip="webdev" aria-pressed="false">Web Dev</button>
+        <button class="chip" type="button" data-track-chip="devops" aria-pressed="false">DevOps</button>
+        <button class="chip" type="button" data-track-chip="web3" aria-pressed="false">Web3</button>
+        <button class="chip" type="button" data-track-chip="other" aria-pressed="false">Other</button>
+        <span class="chip-divider" aria-hidden="true"></span>
+        <button class="chip" type="button" data-status-chip="todo" aria-pressed="false">To do</button>
+        <button class="chip" type="button" data-status-chip="done" aria-pressed="false">Done</button>
+        <button class="chip" type="button" data-status-chip="bookmarked" aria-pressed="false">Bookmarked</button>
       </div>
 
       <div class="list-head">
         <div>
-          <h3>Course order</h3>
+          <h3 id="listTitle">Course order</h3>
           <span>Grouped into phases so the backlog is easier to scan.</span>
         </div>
-        <span id="resultSummary">156 lectures</span>
+        <span id="resultSummary" aria-live="polite">156 lectures</span>
       </div>
 
       <section class="list" id="lectureList" aria-label="Lecture list"></section>
-      <div class="empty" id="emptyState">No lectures match your current filters.</div>
+      <div class="empty" id="emptyState">No lectures match your current filters.<br><button class="btn" id="emptyClearBtn" type="button">Clear filters</button></div>
       <p class="footer">Data source: your pasted Cohort 3.0 lecture list. If new lectures are added later, add them to the LECTURES array near the bottom of this HTML file.</p>
     </div>
   </main>
 </div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastMessage"></span><button id="toastAction" type="button" hidden>Undo</button></div>
+
+<dialog id="notesDialog" aria-labelledby="notesTitle">
+  <form class="dialog-body" method="dialog">
+    <h3 id="notesTitle">Lecture notes</h3>
+    <p id="notesLectureTitle"></p>
+    <label class="sr-only" for="notesText">Notes for this lecture</label>
+    <textarea id="notesText" placeholder="Capture key ideas, questions, useful links, or what to revisit..."></textarea>
+    <div class="dialog-actions"><button class="btn" value="cancel">Cancel</button><button class="btn primary" id="saveNotesBtn" value="default">Save notes</button></div>
+  </form>
+</dialog>
+
+<dialog id="resetDialog" aria-labelledby="resetTitle">
+  <div class="dialog-body">
+    <h3 id="resetTitle">Reset all progress?</h3>
+    <p>This clears completions, bookmarks, and notes from this browser. Export a backup first if you may need them later.</p>
+    <div class="dialog-actions"><button class="btn" id="cancelResetBtn" type="button">Cancel</button><button class="btn danger" id="confirmResetBtn" type="button">Reset everything</button></div>
+  </div>
+</dialog>
 
 <script>
 const LECTURES = [
@@ -1776,10 +1955,19 @@ const PHASES = [
 ];
 const STORAGE_KEY = 'cohort-3-tracker-progress-v1';
 const THEME_KEY = 'cohort-3-tracker-theme-v1';
+const NOTES_KEY = 'cohort-3-tracker-notes-v1';
+const PREFS_KEY = 'cohort-3-tracker-preferences-v1';
+const COURSE_URL = 'https://100xdevs.com/new-courses/14/content?activeTab=Content';
 let progress = loadProgress();
+let notes = loadJson(NOTES_KEY, {});
+let preferences = loadJson(PREFS_KEY, { weeklyGoal: 7, density: 'comfortable', collapsedPhases: [], bookmarks: [] });
 let focusMode = false;
 let statusFilterValue = 'all';
 let trackFilterValue = 'all';
+let sortValue = 'course';
+let activeNotesId = null;
+let toastTimer = null;
+let deferredInstallPrompt = null;
 
 const listEl = document.getElementById('lectureList');
 const searchEl = document.getElementById('search');
@@ -1794,6 +1982,19 @@ function loadProgress() {
   }
 }
 
+function loadJson(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? Object.assign(Array.isArray(fallback) ? [] : {}, fallback, JSON.parse(raw)) : fallback;
+  } catch (error) {
+    return fallback;
+  }
+}
+
+function savePreferences() {
+  localStorage.setItem(PREFS_KEY, JSON.stringify(preferences));
+}
+
 function saveProgress() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
 }
@@ -1804,7 +2005,7 @@ function escapeHtml(value) {
 
 function formatSeconds(totalSeconds) {
   const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.round((totalSeconds % 3600) / 60);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
   if (hours && minutes) return hours + 'h ' + minutes + 'm';
   if (hours) return hours + 'h';
   return minutes + 'm';
@@ -1814,14 +2015,54 @@ function isDone(id) {
   return Boolean(progress[id]);
 }
 
+function isBookmarked(id) {
+  return preferences.bookmarks.includes(id);
+}
+
+function showToast(message, actionLabel, action) {
+  const toast = document.getElementById('toast');
+  const actionBtn = document.getElementById('toastAction');
+  document.getElementById('toastMessage').textContent = message;
+  actionBtn.hidden = !action;
+  actionBtn.textContent = actionLabel || 'Undo';
+  actionBtn.onclick = action || null;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 5000);
+}
+
 function toggleLecture(id) {
+  const lecture = LECTURES.find(item => item.id === id);
   if (progress[id]) {
+    const previous = progress[id];
     delete progress[id];
+    showToast('Lecture marked as incomplete.', 'Undo', () => {
+      progress[id] = previous;
+      saveProgress();
+      render();
+      document.getElementById('toast').classList.remove('show');
+    });
   } else {
     progress[id] = { completedAt: new Date().toISOString() };
+    showToast((lecture ? '#' + lecture.n + ' ' : '') + 'Lecture marked complete.', 'Undo', () => {
+      delete progress[id];
+      saveProgress();
+      render();
+      document.getElementById('toast').classList.remove('show');
+    });
   }
   saveProgress();
   render();
+}
+
+function toggleBookmark(id) {
+  const index = preferences.bookmarks.indexOf(id);
+  if (index >= 0) preferences.bookmarks.splice(index, 1);
+  else preferences.bookmarks.push(id);
+  savePreferences();
+  renderList();
+  updateChips();
+  showToast(index >= 0 ? 'Bookmark removed.' : 'Lecture bookmarked.');
 }
 
 function getFilteredLectures() {
@@ -1831,11 +2072,19 @@ function getFilteredLectures() {
   let filtered = LECTURES.filter(lecture => {
     if (status === 'done' && !isDone(lecture.id)) return false;
     if (status === 'todo' && isDone(lecture.id)) return false;
+    if (status === 'bookmarked' && !isBookmarked(lecture.id)) return false;
     if (track !== 'all' && lecture.track !== track) return false;
     if (query && !(lecture.title.toLowerCase().includes(query) || String(lecture.n).includes(query))) return false;
     return true;
   });
   if (focusMode) filtered = LECTURES.filter(lecture => !isDone(lecture.id)).slice(0, 10);
+  if (sortValue === 'shortest') filtered.sort((a, b) => a.seconds - b.seconds);
+  if (sortValue === 'longest') filtered.sort((a, b) => b.seconds - a.seconds);
+  if (sortValue === 'recent') filtered.sort((a, b) => {
+    const aTime = progress[a.id]?.completedAt || '';
+    const bTime = progress[b.id]?.completedAt || '';
+    return bTime.localeCompare(aTime) || a.n - b.n;
+  });
   return filtered;
 }
 
@@ -1845,9 +2094,11 @@ function getPhase(lecture) {
 
 function renderLecture(lecture) {
   const done = isDone(lecture.id);
+  const bookmarked = isBookmarked(lecture.id);
+  const hasNotes = Boolean(notes[lecture.id]);
   const track = TRACKS[lecture.track];
-  return '<article class="lecture ' + (done ? 'done' : '') + '" id="' + lecture.id + '" data-track="' + lecture.track + '" tabindex="0" role="button" aria-pressed="' + done + '" onclick="toggleLecture(\'' + lecture.id + '\')">' +
-    '<button class="check" type="button" aria-label="Toggle lecture ' + lecture.n + '" onclick="event.stopPropagation(); toggleLecture(\'' + lecture.id + '\')">' +
+  return '<article class="lecture ' + (done ? 'done' : '') + '" id="' + lecture.id + '" data-track="' + lecture.track + '">' +
+    '<button class="check" type="button" aria-label="' + (done ? 'Mark lecture ' + lecture.n + ' incomplete' : 'Mark lecture ' + lecture.n + ' complete') + '" aria-pressed="' + done + '" onclick="toggleLecture(\'' + lecture.id + '\')">' +
       '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>' +
     '</button>' +
     '<div class="lecture-body">' +
@@ -1858,20 +2109,31 @@ function renderLecture(lecture) {
       '</div>' +
       '<div class="title">' + escapeHtml(lecture.title) + '</div>' +
     '</div>' +
+    '<div class="lecture-actions">' +
+      '<button class="row-action ' + (bookmarked ? 'bookmarked' : '') + '" type="button" aria-label="' + (bookmarked ? 'Remove bookmark' : 'Bookmark lecture') + ' ' + lecture.n + '" aria-pressed="' + bookmarked + '" onclick="toggleBookmark(\'' + lecture.id + '\')">' + (bookmarked ? '★' : '☆') + '</button>' +
+      '<button class="row-action" type="button" aria-label="' + (hasNotes ? 'Edit notes for' : 'Add notes to') + ' lecture ' + lecture.n + '" onclick="openNotes(\'' + lecture.id + '\')">' + (hasNotes ? '▣' : '▤') + '</button>' +
+      '<a class="row-action open-link" href="' + COURSE_URL + '" target="_blank" rel="noreferrer" aria-label="Open course for lecture ' + lecture.n + '">↗</a>' +
+    '</div>' +
   '</article>';
 }
 
 function renderList() {
   const filtered = getFilteredLectures();
   emptyStateEl.style.display = filtered.length ? 'none' : 'block';
-  const html = PHASES.map(phase => {
-    const phaseLectures = filtered.filter(lecture => getPhase(lecture).id === phase.id);
+  const groups = sortValue === 'course'
+    ? PHASES.map(phase => ({ phase, phaseLectures: filtered.filter(lecture => getPhase(lecture).id === phase.id), allPhaseLectures: LECTURES.filter(lecture => getPhase(lecture).id === phase.id) }))
+    : [{ phase: { id: 'sorted', title: 'Sorted results', detail: 'All matching lectures in your selected order' }, phaseLectures: filtered, allPhaseLectures: filtered }];
+  const html = groups.map(({ phase, phaseLectures, allPhaseLectures }) => {
     if (!phaseLectures.length) return '';
-    const doneInPhase = phaseLectures.filter(lecture => isDone(lecture.id)).length;
-    return '<section class="phase-group">' +
+    const doneInPhase = allPhaseLectures.filter(lecture => isDone(lecture.id)).length;
+    const collapsed = preferences.collapsedPhases.includes(phase.id);
+    return '<section class="phase-group ' + (collapsed ? 'collapsed' : '') + '">' +
       '<div class="phase-head">' +
-        '<div><h4>' + escapeHtml(phase.title) + '</h4><p>' + escapeHtml(phase.detail) + '</p></div>' +
-        '<div class="phase-count">' + doneInPhase + '/' + phaseLectures.length + '</div>' +
+        '<button class="phase-toggle" type="button" aria-expanded="' + !collapsed + '" onclick="togglePhase(\'' + phase.id + '\')">' +
+          '<span class="phase-copy"><span class="phase-title">' + escapeHtml(phase.title) + '</span><span class="phase-detail">' + escapeHtml(phase.detail) + '</span></span>' +
+          '<div class="phase-count">' + doneInPhase + '/' + allPhaseLectures.length + ' complete' + (phaseLectures.length !== allPhaseLectures.length ? ' · ' + phaseLectures.length + ' visible' : '') + '</div>' +
+          '<span class="phase-chevron" aria-hidden="true">⌄</span>' +
+        '</button>' +
       '</div>' +
       '<div class="phase-items">' + phaseLectures.map(renderLecture).join('') + '</div>' +
     '</section>';
@@ -1880,6 +2142,16 @@ function renderList() {
   document.getElementById('visibleCount').textContent = filtered.length;
   document.getElementById('visibleSub').textContent = focusMode ? 'Focus queue' : 'After filters';
   document.getElementById('resultSummary').textContent = filtered.length + ' lecture' + (filtered.length === 1 ? '' : 's');
+  document.getElementById('listTitle').textContent = sortValue === 'course' ? 'Course order' : document.getElementById('sortSelect').selectedOptions[0].textContent;
+  document.getElementById('lectureList').classList.toggle('compact', preferences.density === 'compact');
+}
+
+function togglePhase(id) {
+  const index = preferences.collapsedPhases.indexOf(id);
+  if (index >= 0) preferences.collapsedPhases.splice(index, 1);
+  else preferences.collapsedPhases.push(id);
+  savePreferences();
+  renderList();
 }
 
 function renderStats() {
@@ -1889,9 +2161,12 @@ function renderStats() {
   const totalSeconds = LECTURES.reduce((sum, lecture) => sum + lecture.seconds, 0);
   const watchedSeconds = doneLectures.reduce((sum, lecture) => sum + lecture.seconds, 0);
   const pct = total ? Math.round((done / total) * 100) : 0;
+  const runtimePct = totalSeconds ? Math.round((watchedSeconds / totalSeconds) * 100) : 0;
 
   document.getElementById('overallPct').textContent = pct + '%';
   document.getElementById('overallBar').style.width = pct + '%';
+  document.getElementById('overallMeter').setAttribute('aria-valuenow', done);
+  document.getElementById('overallMeter').setAttribute('aria-valuetext', done + ' of ' + total + ' lectures complete');
   document.getElementById('ringPct').textContent = pct + '%';
   document.getElementById('progressRing').style.setProperty('--ring', pct + '%');
   document.getElementById('doneCount').textContent = done;
@@ -1902,24 +2177,45 @@ function renderStats() {
   document.getElementById('totalTime').textContent = formatSeconds(totalSeconds);
   document.getElementById('remainingTime').textContent = formatSeconds(totalSeconds - watchedSeconds);
   document.getElementById('remainingSub').textContent = (total - done) + ' lecture' + (total - done === 1 ? '' : 's') + ' left';
+  document.getElementById('runtimePct').textContent = runtimePct + '%';
   document.getElementById('subline').textContent = done + ' of ' + total + ' lectures complete';
+
+  const weeklyGoal = Math.max(1, Number(preferences.weeklyGoal) || 7);
+  const weeksLeft = (totalSeconds - watchedSeconds) / 3600 / weeklyGoal;
+  const eta = new Date();
+  eta.setDate(eta.getDate() + Math.ceil(weeksLeft * 7));
+  document.getElementById('etaDate').textContent = done === total ? 'Complete' : eta.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+  document.getElementById('etaSub').textContent = weeklyGoal + ' study hours per week';
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const weeklySeconds = doneLectures.reduce((sum, lecture) => {
+    const completedAt = Date.parse(progress[lecture.id]?.completedAt || '');
+    return sum + (completedAt >= weekAgo ? lecture.seconds : 0);
+  }, 0);
+  const weeklyHours = weeklySeconds / 3600;
+  document.getElementById('goalHint').textContent = weeklyHours.toFixed(1) + ' of ' + weeklyGoal + ' hours completed in the last 7 days.';
 
   const next = LECTURES.find(lecture => !isDone(lecture.id));
   document.getElementById('nextMeta').innerHTML = next ? '<span class="num">#' + String(next.n).padStart(3, '0') + '</span><span class="badge ' + next.track + '">' + TRACKS[next.track].label + '</span><span class="duration">' + escapeHtml(next.duration) + '</span>' : '';
   document.getElementById('nextLecture').textContent = next ? 'Open the course, watch this video, then come back and mark it complete.' : 'All lectures are marked complete.';
   document.getElementById('nextTitle').textContent = next ? next.title : 'Course complete';
   document.getElementById('markNextBtn').disabled = !next;
+  document.getElementById('openNextBtn').setAttribute('aria-disabled', String(!next));
+  document.getElementById('openNextBtn').tabIndex = next ? 0 : -1;
+  document.getElementById('markNextBtn').textContent = next ? 'Complete lecture #' + String(next.n).padStart(3, '0') : 'Course complete';
 
   document.getElementById('trackStats').innerHTML = Object.keys(TRACKS).map(key => {
     const trackLectures = LECTURES.filter(lecture => lecture.track === key);
     const trackDone = trackLectures.filter(lecture => isDone(lecture.id)).length;
     const trackPct = trackLectures.length ? Math.round(trackDone / trackLectures.length * 100) : 0;
-    return '<div class="track-row">' +
+    return '<button class="track-row" type="button" onclick="setTrackFilter(\'' + key + '\')" aria-label="Show ' + TRACKS[key].label + ' lectures, ' + trackPct + ' percent complete">' +
       '<div class="dot" style="background:' + TRACKS[key].color + '"></div>' +
       '<strong>' + TRACKS[key].label + '</strong>' +
       '<span>' + trackDone + '/' + trackLectures.length + ' - ' + trackPct + '%</span>' +
-    '</div>';
+    '</button>';
   }).join('');
+
+  const recent = doneLectures.slice().sort((a, b) => (progress[b.id]?.completedAt || '').localeCompare(progress[a.id]?.completedAt || '')).slice(0, 3);
+  document.getElementById('recentList').innerHTML = recent.length ? recent.map(lecture => '<div class="recent-item"><strong>#' + lecture.n + '</strong> ' + escapeHtml(lecture.title) + '</div>').join('') : '<div class="recent-item">Nothing completed yet.</div>';
 }
 
 function render() {
@@ -1943,9 +2239,7 @@ function scrollToNextUndone() {
 function markNextDone() {
   const next = LECTURES.find(lecture => !isDone(lecture.id));
   if (!next) return;
-  progress[next.id] = { completedAt: new Date().toISOString() };
-  saveProgress();
-  render();
+  toggleLecture(next.id);
 }
 
 function toggleFocusMode() {
@@ -1961,11 +2255,19 @@ function toggleFocusMode() {
 
 function updateChips() {
   document.querySelectorAll('[data-track-chip]').forEach(chip => {
-    chip.classList.toggle('active', chip.dataset.trackChip === trackFilterValue);
+    const active = chip.dataset.trackChip === trackFilterValue;
+    chip.classList.toggle('active', active);
+    chip.setAttribute('aria-pressed', String(active));
   });
   document.querySelectorAll('[data-status-chip]').forEach(chip => {
-    chip.classList.toggle('active', statusFilterValue === chip.dataset.statusChip && !focusMode);
+    const active = statusFilterValue === chip.dataset.statusChip && !focusMode;
+    chip.classList.toggle('active', active);
+    chip.setAttribute('aria-pressed', String(active));
   });
+  const hasFilters = focusMode || trackFilterValue !== 'all' || statusFilterValue !== 'all' || searchEl.value.trim();
+  const note = document.getElementById('filterNote');
+  note.classList.toggle('show', Boolean(focusMode));
+  document.getElementById('clearFiltersBtn').disabled = !hasFilters;
 }
 
 function setTrackFilter(value) {
@@ -1973,6 +2275,7 @@ function setTrackFilter(value) {
   document.getElementById('focusBtn').textContent = 'Focus next 10';
   trackFilterValue = value;
   render();
+  if (window.matchMedia('(max-width: 980px)').matches && sidebarEl.classList.contains('open')) closeSidebar();
 }
 
 function setStatusFilter(value) {
@@ -1982,8 +2285,56 @@ function setStatusFilter(value) {
   render();
 }
 
+function clearFilters() {
+  focusMode = false;
+  statusFilterValue = 'all';
+  trackFilterValue = 'all';
+  sortValue = 'course';
+  searchEl.value = '';
+  document.getElementById('sortSelect').value = 'course';
+  document.getElementById('focusBtn').textContent = 'Focus next 10';
+  render();
+}
+
+function toggleDensity() {
+  preferences.density = preferences.density === 'compact' ? 'comfortable' : 'compact';
+  savePreferences();
+  document.getElementById('densityBtn').textContent = preferences.density === 'compact' ? 'Comfortable list' : 'Compact list';
+  renderList();
+  document.getElementById('moreMenu').open = false;
+}
+
+function saveGoal() {
+  const input = document.getElementById('weeklyGoal');
+  const value = Math.min(80, Math.max(1, Number(input.value) || 7));
+  preferences.weeklyGoal = value;
+  input.value = value;
+  savePreferences();
+  renderStats();
+  showToast('Weekly goal saved.');
+}
+
+function openNotes(id) {
+  const lecture = LECTURES.find(item => item.id === id);
+  activeNotesId = id;
+  document.getElementById('notesLectureTitle').textContent = lecture ? '#' + lecture.n + ' · ' + lecture.title : '';
+  document.getElementById('notesText').value = notes[id] || '';
+  document.getElementById('notesDialog').showModal();
+  setTimeout(() => document.getElementById('notesText').focus(), 0);
+}
+
+function saveNotes() {
+  if (!activeNotesId) return;
+  const value = document.getElementById('notesText').value.trim();
+  if (value) notes[activeNotesId] = value;
+  else delete notes[activeNotesId];
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+  renderList();
+  showToast(value ? 'Notes saved.' : 'Empty notes removed.');
+}
+
 function exportProgress() {
-  const payload = JSON.stringify({ exportedAt: new Date().toISOString(), progress }, null, 2);
+  const payload = JSON.stringify({ version: 2, exportedAt: new Date().toISOString(), progress, notes, preferences }, null, 2);
   const blob = new Blob([payload], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -1993,18 +2344,57 @@ function exportProgress() {
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+  document.getElementById('moreMenu').open = false;
+  showToast('Backup exported.');
+}
+
+async function importProgress(file) {
+  if (!file) return;
+  try {
+    const payload = JSON.parse(await file.text());
+    if (!payload || typeof payload.progress !== 'object' || Array.isArray(payload.progress)) throw new Error('Invalid backup');
+    progress = payload.progress;
+    notes = payload.notes && typeof payload.notes === 'object' ? payload.notes : {};
+    if (payload.preferences && typeof payload.preferences === 'object') preferences = Object.assign(preferences, payload.preferences);
+    saveProgress();
+    localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+    savePreferences();
+    applyPreferences();
+    render();
+    showToast('Progress backup imported.');
+  } catch (error) {
+    showToast('That file is not a valid tracker backup.');
+  } finally {
+    document.getElementById('importFile').value = '';
+    document.getElementById('moreMenu').open = false;
+  }
 }
 
 function resetProgress() {
-  if (!confirm('Reset all completed lectures?')) return;
   progress = {};
+  notes = {};
+  preferences.bookmarks = [];
   saveProgress();
+  localStorage.setItem(NOTES_KEY, '{}');
+  savePreferences();
   render();
+  document.getElementById('resetDialog').close();
+  document.getElementById('moreMenu').open = false;
+  showToast('Tracker progress was reset.');
 }
 
 function applySavedTheme() {
   const savedTheme = localStorage.getItem(THEME_KEY);
   if (savedTheme === 'light') document.documentElement.setAttribute('data-theme', 'light');
+  updateThemeButton();
+}
+
+function updateThemeButton() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  document.getElementById('themeIcon').textContent = isLight ? '☾' : '☀';
+  document.getElementById('themeLabel').textContent = isLight ? 'Dark mode' : 'Light mode';
+  document.getElementById('themeBtn').setAttribute('aria-pressed', String(isLight));
+  document.getElementById('themeBtn').setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
 }
 
 function toggleTheme() {
@@ -2016,38 +2406,65 @@ function toggleTheme() {
     document.documentElement.setAttribute('data-theme', 'light');
     localStorage.setItem(THEME_KEY, 'light');
   }
+  updateThemeButton();
 }
 
 const sidebarEl = document.getElementById('sidebar');
 const overlayEl = document.getElementById('overlay');
+const mobileSidebarQuery = window.matchMedia('(max-width: 980px)');
+
+function syncSidebarAccessibility() {
+  sidebarEl.inert = mobileSidebarQuery.matches && !sidebarEl.classList.contains('open');
+}
 
 function openSidebar() {
+  sidebarEl.inert = false;
   sidebarEl.classList.add('open');
   overlayEl.classList.add('open');
+  document.body.classList.add('sidebar-open');
+  document.getElementById('menuBtn').setAttribute('aria-expanded', 'true');
+  document.getElementById('closeSidebarBtn').focus();
 }
 
 function closeSidebar() {
+  const wasOpen = sidebarEl.classList.contains('open');
   sidebarEl.classList.remove('open');
   overlayEl.classList.remove('open');
+  document.body.classList.remove('sidebar-open');
+  document.getElementById('menuBtn').setAttribute('aria-expanded', 'false');
+  syncSidebarAccessibility();
+  if (wasOpen) document.getElementById('menuBtn').focus();
 }
 
-listEl.addEventListener('keydown', event => {
-  const item = event.target.closest('.lecture');
-  if (!item) return;
-  if (event.key === 'Enter' || event.key === ' ') {
-    event.preventDefault();
-    toggleLecture(item.id);
-  }
-});
+function applyPreferences() {
+  preferences.weeklyGoal = Math.max(1, Number(preferences.weeklyGoal) || 7);
+  if (!Array.isArray(preferences.bookmarks)) preferences.bookmarks = [];
+  if (!Array.isArray(preferences.collapsedPhases)) preferences.collapsedPhases = [];
+  document.getElementById('weeklyGoal').value = preferences.weeklyGoal;
+  document.getElementById('densityBtn').textContent = preferences.density === 'compact' ? 'Comfortable list' : 'Compact list';
+}
 
 searchEl.addEventListener('input', () => { focusMode = false; document.getElementById('focusBtn').textContent = 'Focus next 10'; renderList(); updateChips(); });
 document.getElementById('nextBtn').addEventListener('click', scrollToNextUndone);
 document.getElementById('markNextBtn').addEventListener('click', markNextDone);
 document.getElementById('focusBtn').addEventListener('click', toggleFocusMode);
+document.getElementById('exitFocusBtn').addEventListener('click', clearFilters);
+document.getElementById('clearFiltersBtn').addEventListener('click', clearFilters);
+document.getElementById('emptyClearBtn').addEventListener('click', clearFilters);
+document.getElementById('sortSelect').addEventListener('change', event => { sortValue = event.target.value; renderList(); });
+document.getElementById('densityBtn').addEventListener('click', toggleDensity);
+document.getElementById('saveGoalBtn').addEventListener('click', saveGoal);
+document.getElementById('weeklyGoal').addEventListener('keydown', event => { if (event.key === 'Enter') saveGoal(); });
 document.getElementById('exportBtn').addEventListener('click', exportProgress);
-document.getElementById('resetBtn').addEventListener('click', resetProgress);
+document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change', event => importProgress(event.target.files[0]));
+document.getElementById('resetBtn').addEventListener('click', () => document.getElementById('resetDialog').showModal());
+document.getElementById('cancelResetBtn').addEventListener('click', () => document.getElementById('resetDialog').close());
+document.getElementById('confirmResetBtn').addEventListener('click', resetProgress);
+document.getElementById('saveNotesBtn').addEventListener('click', saveNotes);
 document.getElementById('themeBtn').addEventListener('click', toggleTheme);
 document.getElementById('menuBtn').addEventListener('click', openSidebar);
+document.getElementById('closeSidebarBtn').addEventListener('click', closeSidebar);
 overlayEl.addEventListener('click', closeSidebar);
 document.querySelectorAll('[data-track-chip]').forEach(chip => {
   chip.addEventListener('click', () => setTrackFilter(chip.dataset.trackChip));
@@ -2056,7 +2473,43 @@ document.querySelectorAll('[data-status-chip]').forEach(chip => {
   chip.addEventListener('click', () => setStatusFilter(chip.dataset.statusChip));
 });
 
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && sidebarEl.classList.contains('open')) closeSidebar();
+  if (event.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) {
+    event.preventDefault();
+    searchEl.focus();
+  }
+  if (event.key === 'Tab' && sidebarEl.classList.contains('open')) {
+    const focusable = [...sidebarEl.querySelectorAll('button, a, input')].filter(el => !el.disabled && el.offsetParent !== null);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  }
+});
+
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  document.getElementById('installBtn').hidden = false;
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  document.getElementById('installBtn').hidden = true;
+  document.getElementById('moreMenu').open = false;
+});
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
+}
+
 applySavedTheme();
+applyPreferences();
+syncSidebarAccessibility();
+mobileSidebarQuery.addEventListener('change', syncSidebarAccessibility);
 render();
 </script>
 </body>
